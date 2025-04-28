@@ -1,0 +1,54 @@
+mysql:
+  enabled: false
+  host: "localhost"
+  port: 3306
+  database: "treexbuyer"
+  username: "root"
+  password: ""
+
+logger: false
+
+priceItem:
+  path: priceItem.yml
+
+menu:
+  seller:
+    path: Menu/seller.yml
+
+  mobs:
+    path: Menu/mobs.yml
+  mine:
+    path: Menu/mine.yml
+
+
+autoBuyDelay: 60 # В тиках. Как часто будет срабатывать АвтоСкупка. По умолчанию 60 - 3 секунды
+
+autoBuy:
+  enable: "&aВключён"
+  disable: "&cВыключен"
+  message: "&eПродано предметов на сумму: &a%sum% &eи получено &b%score% очков"
+  disabled-worlds:
+    - duel-1
+    - duel-2
+
+#########################[Сообщения]#######################
+completeSaleMessage: '&eВы продали предметы на сумму: &a%sell_pay% &eи получили &b%sell_score% очков'
+noItemsToSellMessage: 'У вас нет предметов для продажи'
+
+# ALL - Коэффициент работает на все предметы одинаково
+# CATEGORY -
+coefficientType: ALL
+
+# за каждые 100 очков игрок будет получать +0.1 к коэффициенту
+score-to-multiplier-ratio:
+  scores: 100
+  coefficient: 0.1
+
+# максимальный коэффициент (без учёта донатных бустов)
+max-legal-coefficient: 3
+default-coefficient: 1
+booster:
+  donat-1: # имя (может быть любым)
+    permission: 'buyer.boost.donat1' # (пермишен по которому будет определяться наличие буста)
+    external-coefficient: 0.5
+

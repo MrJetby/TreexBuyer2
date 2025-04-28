@@ -1,0 +1,14 @@
+name: TreexBuyer
+version: '${project.version}'
+main: me.jetby.treexbuyer.Main
+api-version: '1.16'
+depend:
+  - Vault
+softdepend:
+  - PlaceholderAPI
+commands:
+  treexbuyer:
+    aliases:
+      - tbuyer
+      - xbuyer
+      - tb
