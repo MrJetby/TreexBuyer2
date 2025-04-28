@@ -3,7 +3,7 @@ package me.jetby.treexbuyer.menus;
 import lombok.Getter;
 import me.jetby.treexbuyer.Main;
 import me.jetby.treexbuyer.configurations.PriseItemLoader;
-import me.jetby.treexbuyer.sex.BoostManager;
+import me.jetby.treexbuyer.functions.BoostManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

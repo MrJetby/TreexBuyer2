@@ -1,7 +1,7 @@
 package me.jetby.treexbuyer.tools;
 
 import me.jetby.treexbuyer.Main;
-import me.jetby.treexbuyer.sex.BoostManager;
+import me.jetby.treexbuyer.functions.BoostManager;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

@@ -2,7 +2,7 @@ package me.jetby.treexbuyer.menus;
 
 import me.jetby.treexbuyer.Main;
 import me.jetby.treexbuyer.configurations.PriseItemLoader;
-import me.jetby.treexbuyer.sex.BoostManager;
+import me.jetby.treexbuyer.functions.BoostManager;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;

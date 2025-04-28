@@ -1,8 +1,8 @@
 package me.jetby.treexbuyer.listeners;
 
 import me.jetby.treexbuyer.Main;
-import me.jetby.treexbuyer.sex.AutoBuyManager;
-import me.jetby.treexbuyer.sex.BoostManager;
+import me.jetby.treexbuyer.functions.AutoBuyManager;
+import me.jetby.treexbuyer.functions.BoostManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;

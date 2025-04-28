@@ -1,4 +1,4 @@
-package me.jetby.treexbuyer.sex;
+package me.jetby.treexbuyer.functions;
 
 
 import me.jetby.treexbuyer.Main;
