@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static me.jetby.treexbuyer.configurations.Config.CFG;
+import static me.jetby.treexbuyer.menus.ClickHandler.isIsRegularItem;
 import static me.jetby.treexbuyer.tools.Hex.hex;
 
 public class AutoBuyManager {
@@ -92,34 +93,39 @@ public class AutoBuyManager {
             if (item != null && autoBuyList.contains(item.getType().name())) {
                 PriseItemLoader.ItemData itemData = plugin.getItemPrice(item.getType().name());
 
-                if (itemData != null) {
-                    double price = itemData.price();
-                    int scores = itemData.addScores();
+                boolean isRegularItem = isIsRegularItem(item);
 
-                    if (price > 0d) {
-                        double totalPrice = price * item.getAmount();
-                        plugin.getEconomy().depositPlayer(player, totalPrice);
-                        sumCount += totalPrice * boostManager.getPlayerCoefficient(player);
-                        totalScores += scores * item.getAmount(); // Учитываем количество предметов
-                        if (player.getEquipment().getItemInOffHand()!=null && player.getEquipment().getItemInOffHand().equals(item)) {
-                            player.getEquipment().setItemInOffHand(air);
-                        }
-                        if (player.getEquipment().getHelmet()!=null && player.getEquipment().getHelmet().equals(item)) {
-                            player.getEquipment().setHelmet(air);
-                        }
-                        if (player.getEquipment().getChestplate()!=null && player.getEquipment().getChestplate().equals(item)) {
-                            player.getEquipment().setChestplate(air);
-                        }
-                        if (player.getEquipment().getLeggings()!=null && player.getEquipment().getLeggings().equals(item)) {
-                            player.getEquipment().setLeggings(air);
-                        }
-                        if (player.getEquipment().getBoots()!=null && player.getEquipment().getBoots().equals(item)) {
-                            player.getEquipment().setBoots(air);
-                        }
+                if (isRegularItem) {
+                    if (itemData != null) {
+                        double price = itemData.price();
+                        int scores = itemData.addScores();
 
-                        player.getInventory().removeItem(item);
+                        if (price > 0d) {
+                            double totalPrice = price * item.getAmount();
+                            plugin.getEconomy().depositPlayer(player, totalPrice);
+                            sumCount += totalPrice * boostManager.getPlayerCoefficient(player);
+                            totalScores += scores * item.getAmount();
+                            if (player.getEquipment().getItemInOffHand()!=null && player.getEquipment().getItemInOffHand().equals(item)) {
+                                player.getEquipment().setItemInOffHand(air);
+                            }
+                            if (player.getEquipment().getHelmet()!=null && player.getEquipment().getHelmet().equals(item)) {
+                                player.getEquipment().setHelmet(air);
+                            }
+                            if (player.getEquipment().getChestplate()!=null && player.getEquipment().getChestplate().equals(item)) {
+                                player.getEquipment().setChestplate(air);
+                            }
+                            if (player.getEquipment().getLeggings()!=null && player.getEquipment().getLeggings().equals(item)) {
+                                player.getEquipment().setLeggings(air);
+                            }
+                            if (player.getEquipment().getBoots()!=null && player.getEquipment().getBoots().equals(item)) {
+                                player.getEquipment().setBoots(air);
+                            }
+
+                            player.getInventory().removeItem(item);
+                        }
                     }
                 }
+
             }
         }
 

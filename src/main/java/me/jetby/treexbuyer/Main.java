@@ -12,6 +12,7 @@ import me.jetby.treexbuyer.menus.*;
 import me.jetby.treexbuyer.menus.actions.Actions;
 import me.jetby.treexbuyer.functions.AutoBuyManager;
 import me.jetby.treexbuyer.functions.BoostManager;
+import me.jetby.treexbuyer.tools.Metrics;
 import me.jetby.treexbuyer.tools.PlaceholderExpansion;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -50,6 +51,8 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
+
 
         configLoader = new Config();
         configLoader.loadYamlFile(this);
@@ -97,6 +100,8 @@ public final class Main extends JavaPlugin {
         } else {
             getLogger().warning("PlaceholderAPI не обнаружен! Некоторые функции могут быть недоступны.");
         }
+
+        new Metrics(this, 25141);
     }
     public void createCommand(){
         // ниже регистрация всех команд

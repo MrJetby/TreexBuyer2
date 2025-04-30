@@ -1,5 +1,6 @@
 package me.jetby.treexbuyer.tools;
 
+import lombok.Getter;
 import me.jetby.treexbuyer.Main;
 
 import java.io.File;
@@ -14,7 +15,8 @@ import static org.bukkit.Bukkit.getLogger;
 
 public class Database {
 
-    private static Connection connection;
+    @Getter
+    private Connection connection;
     private final Main plugin;
     private final boolean useMySQL;
 
@@ -26,7 +28,6 @@ public class Database {
     public void initDatabase() {
         try {
             if (useMySQL) {
-                // MySQL подключение
                 String host = CFG().getString("mysql.host", "localhost");
                 int port = CFG().getInt("mysql.port", 3306);
                 String database = CFG().getString("mysql.database", "treexbuyer");
@@ -40,7 +41,6 @@ public class Database {
                     plugin.getLogger().info("[TreexBuyer] Подключено к MySQL серверу: " + host);
                 }
             } else {
-                // SQLite подключение (оригинальный код)
                 File dbFile = new File("plugins/TreexBuyer/data.db");
                 if (!dbFile.getParentFile().exists()) {
                     dbFile.getParentFile().mkdirs();
@@ -65,7 +65,6 @@ public class Database {
     private void createTable() {
         try (Statement stmt = connection.createStatement()) {
             if (useMySQL) {
-                // MySQL таблицы
                 stmt.executeUpdate("CREATE TABLE IF NOT EXISTS players (" +
                         "uuid VARCHAR(36) PRIMARY KEY," +
                         "scores DOUBLE DEFAULT 0" +
@@ -77,7 +76,6 @@ public class Database {
                         "items TEXT" +
                         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
             } else {
-                // SQLite таблицы (оригинальный код)
                 stmt.executeUpdate("CREATE TABLE IF NOT EXISTS players (" +
                         "uuid TEXT PRIMARY KEY," +
                         "scores REAL DEFAULT 0" +
@@ -95,7 +93,6 @@ public class Database {
         }
     }
 
-    // Остальные методы остаются без изменений
     public <T> T get(String table, UUID uuid, String column, Function<ResultSet, T> extractor) {
         String sql = "SELECT " + column + " FROM " + table + " WHERE uuid = ?;";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -122,28 +119,63 @@ public class Database {
     }
 
     public void insertOrUpdate(String table, UUID uuid, Map<String, Object> data) {
-        String columns = String.join(", ", data.keySet());
-        String placeholders = String.join(", ", Collections.nCopies(data.size(), "?"));
+        if (useMySQL) {
+            String columns = String.join(", ", data.keySet());
+            String placeholders = String.join(", ", Collections.nCopies(data.size(), "?"));
+            String updates = String.join(", ", data.keySet().stream().map(col -> col + " = ?").toList());
 
-        String updates = String.join(", ", data.keySet().stream().map(col -> col + " = ?").toList());
+            String sql = "INSERT INTO " + table + " (uuid, " + columns + ") VALUES (?, " + placeholders + ") " +
+                    "ON DUPLICATE KEY UPDATE " + updates + ";";
 
-        String sql = "INSERT INTO " + table + " (uuid, " + columns + ") VALUES (?, " + placeholders + ") " +
-                "ON DUPLICATE KEY UPDATE " + updates + ";";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, uuid.toString());
-            int i = 2;
-            for (Object value : data.values()) {
-                stmt.setObject(i++, value);
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, uuid.toString());
+                int i = 2;
+                for (Object value : data.values()) {
+                    stmt.setObject(i++, value);
+                }
+                for (Object value : data.values()) {
+                    stmt.setObject(i++, value);
+                }
+                stmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            for (Object value : data.values()) {
-                stmt.setObject(i++, value);
+        } else {
+            String checkSql = "SELECT 1 FROM " + table + " WHERE uuid = ?;";
+            try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
+                checkStmt.setString(1, uuid.toString());
+                ResultSet rs = checkStmt.executeQuery();
+
+                if (rs.next()) {
+                    String updates = String.join(", ", data.keySet().stream().map(k -> k + " = ?").toList());
+                    String updateSql = "UPDATE " + table + " SET " + updates + " WHERE uuid = ?;";
+                    try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
+                        int i = 1;
+                        for (Object value : data.values()) {
+                            updateStmt.setObject(i++, value);
+                        }
+                        updateStmt.setString(i, uuid.toString());
+                        updateStmt.executeUpdate();
+                    }
+                } else {
+                    String columns = String.join(", ", data.keySet());
+                    String placeholders = String.join(", ", Collections.nCopies(data.size(), "?"));
+                    String insertSql = "INSERT INTO " + table + " (uuid, " + columns + ") VALUES (?, " + placeholders + ");";
+                    try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
+                        insertStmt.setString(1, uuid.toString());
+                        int i = 2;
+                        for (Object value : data.values()) {
+                            insertStmt.setObject(i++, value);
+                        }
+                        insertStmt.executeUpdate();
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
+
 
     public void delete(String table, UUID uuid) {
         String sql = "DELETE FROM " + table + " WHERE uuid = ?;";
@@ -168,7 +200,4 @@ public class Database {
         }
     }
 
-    public static Connection getConnection() {
-        return connection;
-    }
 }

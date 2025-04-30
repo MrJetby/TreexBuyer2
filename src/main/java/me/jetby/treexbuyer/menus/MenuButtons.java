@@ -22,7 +22,7 @@ public class MenuButtons {
     List<String> loreButton;
     String materialButton;
     List<String> command;
-    Map<ClickType, List<String>> commands; // Изменяем на Map для хранения команд по типам кликов
+    Map<ClickType, List<String>> commands;
 
     public MenuButtons(Integer slotButton,
                       String titleButton,

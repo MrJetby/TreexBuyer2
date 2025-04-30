@@ -210,7 +210,7 @@ public class ClickHandler implements Listener {
         }
     }
 
-    private static boolean isIsRegularItem(ItemStack item) {
+    public static boolean isIsRegularItem(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
 
         return meta != null &&
