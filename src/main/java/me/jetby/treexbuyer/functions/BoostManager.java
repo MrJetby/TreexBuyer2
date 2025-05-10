@@ -71,10 +71,10 @@ public class BoostManager {
         double playerScore = getCachedScores(player);
 
         int scoreStep = Config.CFG().getInt("score-to-multiplier-ratio.scores", 100);
-        double coefficientStep = Config.CFG().getDouble("score-to-multiplier-ratio.coefficient", 1.0);
+        double coefficientStep = Config.CFG().getDouble("score-to-multiplier-ratio.coefficient", 0.01);
 
         int multiplierCount = (int) (playerScore / scoreStep);
-        double coefficient = multiplierCount * coefficientStep;
+        double coefficient = defaultCoefficient + (multiplierCount * coefficientStep);
 
         for (Boost boost : boosts.values()) {
             if (boost.permission() != null && player.hasPermission(boost.permission())) {
@@ -95,6 +95,10 @@ public class BoostManager {
     public void addPlayerScores(Player player, double scores) {
         UUID uuid = player.getUniqueId();
         cachedScores.merge(uuid, scores, Double::sum);
+    }
+    public void setPlayerScores(Player player, double scores) {
+        UUID uuid = player.getUniqueId();
+        cachedScores.put(uuid, Math.max(0.0, scores));
     }
 
     public void removePlayerScores(Player player, double scores) {

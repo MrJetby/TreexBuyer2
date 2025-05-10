@@ -267,7 +267,6 @@ public class ClickHandler implements Listener {
                         sumCount += totalPrice * boostManager.getPlayerCoefficient(player);
                         totalScores += scores;
 
-                        // Удаление предмета из слотов брони и оффхэнда
                         PlayerInventory inv = player.getInventory();
                         if (player.getEquipment().getItemInOffHand() != null && player.getEquipment().getItemInOffHand().isSimilar(item))
                             player.getEquipment().setItemInOffHand(air);

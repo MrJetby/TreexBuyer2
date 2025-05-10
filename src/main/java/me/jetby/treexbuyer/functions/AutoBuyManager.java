@@ -57,13 +57,17 @@ public class AutoBuyManager {
 
     public void startAutoBuy() {
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
-
+            int delay = 0;
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!getPlayerData(plugin, player.getUniqueId()).isAutoBuyEnabled()) {
-                    return;
+                    continue;
                 }
 
-                checkForItems(player);
+                Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+                    checkForItems(player);
+                }, delay);
+
+                delay += 2;
             }
         }, 0L, CFG().getInt("autoBuyDelay", 60));
     }

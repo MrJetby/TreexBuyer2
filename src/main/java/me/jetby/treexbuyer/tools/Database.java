@@ -8,6 +8,8 @@ import java.sql.*;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 
 import static me.jetby.treexbuyer.configurations.Config.CFG;
@@ -119,6 +121,7 @@ public class Database {
     }
 
     public void insertOrUpdate(String table, UUID uuid, Map<String, Object> data) {
+        dbExecutor.submit(() -> {
         if (useMySQL) {
             String columns = String.join(", ", data.keySet());
             String placeholders = String.join(", ", Collections.nCopies(data.size(), "?"));
@@ -141,42 +144,37 @@ public class Database {
                 e.printStackTrace();
             }
         } else {
-            String checkSql = "SELECT 1 FROM " + table + " WHERE uuid = ?;";
-            try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
-                checkStmt.setString(1, uuid.toString());
-                ResultSet rs = checkStmt.executeQuery();
+            // Новая реализация для SQLite
+            String columns = String.join(", ", data.keySet());
+            String placeholders = String.join(", ", Collections.nCopies(data.size(), "?"));
+            String updates = String.join(", ", data.keySet().stream().map(col -> col + " = ?").toList());
 
-                if (rs.next()) {
-                    String updates = String.join(", ", data.keySet().stream().map(k -> k + " = ?").toList());
-                    String updateSql = "UPDATE " + table + " SET " + updates + " WHERE uuid = ?;";
-                    try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
-                        int i = 1;
-                        for (Object value : data.values()) {
-                            updateStmt.setObject(i++, value);
-                        }
-                        updateStmt.setString(i, uuid.toString());
-                        updateStmt.executeUpdate();
-                    }
-                } else {
-                    String columns = String.join(", ", data.keySet());
-                    String placeholders = String.join(", ", Collections.nCopies(data.size(), "?"));
-                    String insertSql = "INSERT INTO " + table + " (uuid, " + columns + ") VALUES (?, " + placeholders + ");";
-                    try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
-                        insertStmt.setString(1, uuid.toString());
-                        int i = 2;
-                        for (Object value : data.values()) {
-                            insertStmt.setObject(i++, value);
-                        }
-                        insertStmt.executeUpdate();
-                    }
+            String sql = "INSERT OR REPLACE INTO " + table + " (uuid, " + columns + ") VALUES (?, " + placeholders + ")";
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, uuid.toString());
+                int i = 2;
+                for (Object value : data.values()) {
+                    stmt.setObject(i++, value);
                 }
+                stmt.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
+        }});
     }
-
-
+    private final ExecutorService dbExecutor = Executors.newFixedThreadPool(4);
+    public boolean playerExists(String table, UUID uuid) {
+        String sql = "SELECT uuid FROM " + table + " WHERE uuid = ?;";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, uuid.toString());
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     public void delete(String table, UUID uuid) {
         String sql = "DELETE FROM " + table + " WHERE uuid = ?;";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

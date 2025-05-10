@@ -31,6 +31,10 @@ public class Actions {
 
                 break;
             }
+            case "[CLOSE]": {
+                player.closeInventory();
+                break;
+            }
 
             case "[MESSAGE]", "[MSG]": {
                 player.sendMessage(hex(withoutCMD));

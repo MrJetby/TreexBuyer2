@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +52,7 @@ public class PluginCommands implements CommandExecutor, TabCompleter {
             sender.sendMessage(hex("&b/tbuyer open <id> <ник>"));
             sender.sendMessage(hex("&b/tbuyer score give <ник> <кол-во>"));
             sender.sendMessage(hex("&b/tbuyer score take <ник> <кол-во>"));
+            sender.sendMessage(hex("&b/tbuyer score set <ник> <кол-во>"));
 
 
             return true;
@@ -92,6 +94,7 @@ public class PluginCommands implements CommandExecutor, TabCompleter {
             if (args.length<4) {
                 sender.sendMessage(hex("&b/tbuyer score give <ник> <кол-во>"));
                 sender.sendMessage(hex("&b/tbuyer score take <ник> <кол-во>"));
+                sender.sendMessage(hex("&b/tbuyer score set <ник> <кол-во>"));
                 return true;
             }
             if (args[1].equalsIgnoreCase("give")) {
@@ -112,6 +115,19 @@ public class PluginCommands implements CommandExecutor, TabCompleter {
                 if (player != null) {
                     boostManager.removePlayerScores(player, Double.parseDouble(df.format(Double.parseDouble(args[3]))));
                     sender.sendMessage(hex("&b&lTreexBuyer &7▶ &aУспешно отнято. &fТекущий буст игрока " + player.getName() + " составляет x" + boostManager.getPlayerCoefficient(player)));
+                } else {
+                    sender.sendMessage(hex("&b&lTreexBuyer &7▶ &cИгрок не найден."));
+
+                }
+
+                return true;
+            }
+            if (args[1].equalsIgnoreCase("set")) {
+                Player player = Bukkit.getOfflinePlayer(args[2]).getPlayer();
+
+                if (player != null) {
+                    boostManager.setPlayerScores(player, Double.parseDouble(df.format(Double.parseDouble(args[3]))));
+                    sender.sendMessage(hex("&b&lTreexBuyer &7▶ &aУспешно. &fТекущий буст игрока " + player.getName() + " составляет x" + boostManager.getPlayerCoefficient(player)));
                 } else {
                     sender.sendMessage(hex("&b&lTreexBuyer &7▶ &cИгрок не найден."));
 
@@ -162,28 +178,31 @@ public class PluginCommands implements CommandExecutor, TabCompleter {
     }
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        List<String> completions = new ArrayList<>();
         if (sender instanceof Player player) {
-            List<String> commands = List.of("open", "give", "take", "reload");
 
             if (args.length == 1) {
-                String input = args[0].toLowerCase();
-                return commands.stream()
-                        .filter(cmd -> cmd.startsWith(input))
-                        .collect(Collectors.toList());
+                completions.add("open");
+                completions.add("score");
+                completions.add("reload");
             }
 
             if (args.length == 2 && args[0].equalsIgnoreCase("open")) {
                 if (player.hasPermission("treexbuyer.admin")) {
-                    List<String> menuIds = menuLoader.getListMenu().keySet().stream()
+                    return menuLoader.getListMenu().keySet().stream()
                             .filter(menuId -> menuId.toLowerCase().startsWith(args[1].toLowerCase()))
                             .collect(Collectors.toList());
-                    return menuIds;
-                } else {
-                    return List.of();
+                }
+            }
+            if (args.length == 2 && args[0].equalsIgnoreCase("score")) {
+                if (player.hasPermission("treexbuyer.admin")) {
+                    completions.add("take");
+                    completions.add("give");
+                    completions.add("set");
                 }
             }
         }
 
-        return List.of();
+        return completions;
     }
 }

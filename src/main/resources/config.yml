@@ -42,7 +42,7 @@ coefficientType: ALL
 # за каждые 100 очков игрок будет получать +0.1 к коэффициенту
 score-to-multiplier-ratio:
   scores: 100
-  coefficient: 0.1
+  coefficient: 0.01
 
 # максимальный коэффициент (без учёта донатных бустов)
 max-legal-coefficient: 3
