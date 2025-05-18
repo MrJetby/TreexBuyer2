@@ -50,17 +50,17 @@ public class BoostManager {
         });
     }
     public void savePlayerScores(UUID uuid) {
-        Double score = cachedScores.get(uuid);
-        if (score != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                plugin.getDatabase().insertOrUpdate("players", uuid, Collections.singletonMap("scores", score));
-            });
-        }
+        if (!cachedScores.containsKey(uuid)) return;
+
+        double scores = cachedScores.get(uuid);
+        Map<String, Object> data = new HashMap<>();
+        data.put("scores", scores);
+        plugin.getDatabase().insertOrUpdateSync("players", uuid, data);
     }
     public void savePlayerScoresSync(UUID uuid) {
-        Double score = cachedScores.get(uuid);
-        if (score != null) {
-            plugin.getDatabase().insertOrUpdate("players", uuid, Collections.singletonMap("scores", score));
+        if (!cachedScores.containsKey(uuid)) return;
+            Double score = cachedScores.get(uuid);
+            if (score != null) {plugin.getDatabase().insertOrUpdate("players", uuid, Collections.singletonMap("scores", score));
         }
     }
 

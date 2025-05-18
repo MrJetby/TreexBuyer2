@@ -16,9 +16,9 @@ public class Menus implements InventoryHolder {
     String open_permission;
     List<MenuButtons> buttons;
 
-    public Menus(String id, String titile, Integer size, List<String> open_commands, String open_permission, List<MenuButtons> buttons) {
+    public Menus(String id, String title, Integer size, List<String> open_commands, String open_permission, List<MenuButtons> buttons) {
         this.id = id;
-        this.title = titile;
+        this.title = title;
         this.size = size;
         this.open_commands = open_commands;
         this.open_permission = open_permission;

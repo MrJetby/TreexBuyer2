@@ -21,7 +21,6 @@ public class Config {
 
 
         if (!file.exists()) {
-            plugin.getDataFolder().mkdirs();
             plugin.saveResource("config.yml", true);
         }
 
@@ -34,7 +33,6 @@ public class Config {
 
     public void reloadCfg(Plugin plugin) {
         if(!file.exists()) {
-            plugin.getDataFolder().mkdirs();
             plugin.saveResource("config.yml", true);
         }
         try {

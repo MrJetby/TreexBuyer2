@@ -1,0 +1,155 @@
+####################################################################################################
+#
+# Все команды
+#
+# [MESSAGE] Отправить игроку текст
+#
+# [PLAYER] Выполнить команду от имени игрока
+#
+# [CONSOLE] Выполнять команду от имени консоли
+#
+# [ACTIONBAR] Отправить игроку текст в actionbar
+#
+# [SOUND] Произвести игроку звук
+#
+# [EFFECT] Дать игроку эффект
+#
+# [TITLE] Отправить игроку тайтл, чтобы отправить субтайтл используйте символ ";"
+# Например: [TITLE] First;Second
+#
+# [OPEN_MENU] Открыть игроку меню
+#
+# [AUTOBUY_ITEM_TOGGLE]
+#
+# [AUTOBUY_STATUS_TOGGLE]
+#
+# [ENABLE_ALL]
+#
+# [DISABLE_ALL]
+#
+# [SELL_ITEM] <amount>/all
+#
+# [SELL_ALL]
+#
+# [SELL_ZONE]
+#
+####################################################################################################
+#
+# Типы кликов
+#
+# left_click_commands
+# right_click_commands
+# shift_left_click_commands
+# shift_right_click_commands
+# click_commands
+# drop_commands
+#
+####################################################################################################
+#
+# Плейсхолдеры:
+#
+# %price%
+# %coefficient%
+# %score%
+# %seller_pay%
+# %price_with_coefficient%
+# %auto_sell_toggle_state%
+# %global_auto_sell_toggle_state%
+#
+####################################################################################################
+
+
+
+title: "Ресурсы с мобов"
+
+open_permission: none
+size: 54
+Items:
+  background:
+    material: WHITE_STAINED_GLASS_PANE
+    slot:
+      - 0-2
+      - 4
+      - 6-17
+      - 36-52
+    display_name: ""
+
+
+  BONE:
+    material: BONE
+    slot: 18
+    lore:
+      - ' &fИзначальная Цена &a&l$%price% '
+      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Кликните чтобы переключить авто скупку'
+      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+
+  LEATHER:
+    material: LEATHER
+    slot: 19
+    lore:
+      - ' &fИзначальная Цена &a&l$%price% '
+      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Кликните чтобы переключить авто скупку'
+      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+  STRING:
+    material: STRING
+    slot: 20
+    lore:
+      - ' &fИзначальная Цена &a&l$%price% '
+      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Кликните чтобы переключить авто скупку'
+      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+
+  SPIDER_EYE:
+    material: SPIDER_EYE
+    slot: 21
+    lore:
+      - ' &fИзначальная Цена &a&l$%price% '
+      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Кликните чтобы переключить авто скупку'
+      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+
+
+
+  menuMine:
+    material: NETHERITE_INGOT
+    slot: 3
+    display_name: "&6■ &fКатегория: &6Ресурсы из шахты &6■"
+    click_commands:
+      - '[open_menu] mine'
+
+  menuMobs:
+    material: COW_SPAWN_EGG
+    slot: 5
+    display_name: "&6■ &fКатегория: &6Ресурсы с мобов &6■"
+    click_commands:
+      - '[open_menu] mobs'
+
+  back:
+    material: ARROW
+    slot: 53
+    display_name: "&6Вернуться"
+    click_commands:
+      - '[open_menu] seller'
+

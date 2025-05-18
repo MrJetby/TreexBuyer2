@@ -119,7 +119,47 @@ public class Database {
             e.printStackTrace();
         }
     }
+    public void insertOrUpdateSync(String table, UUID uuid, Map<String, Object> data) {
+        // без ExecutorService
+        if (useMySQL) {
+            String columns = String.join(", ", data.keySet());
+            String placeholders = String.join(", ", Collections.nCopies(data.size(), "?"));
+            String updates = String.join(", ", data.keySet().stream().map(col -> col + " = ?").toList());
 
+            String sql = "INSERT INTO " + table + " (uuid, " + columns + ") VALUES (?, " + placeholders + ") " +
+                    "ON DUPLICATE KEY UPDATE " + updates + ";";
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, uuid.toString());
+                int i = 2;
+                for (Object value : data.values()) {
+                    stmt.setObject(i++, value);
+                }
+                for (Object value : data.values()) {
+                    stmt.setObject(i++, value);
+                }
+                stmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            String columns = String.join(", ", data.keySet());
+            String placeholders = String.join(", ", Collections.nCopies(data.size(), "?"));
+
+            String sql = "INSERT OR REPLACE INTO " + table + " (uuid, " + columns + ") VALUES (?, " + placeholders + ")";
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, uuid.toString());
+                int i = 2;
+                for (Object value : data.values()) {
+                    stmt.setObject(i++, value);
+                }
+                stmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public void insertOrUpdate(String table, UUID uuid, Map<String, Object> data) {
         dbExecutor.submit(() -> {
         if (useMySQL) {
@@ -144,7 +184,6 @@ public class Database {
                 e.printStackTrace();
             }
         } else {
-            // Новая реализация для SQLite
             String columns = String.join(", ", data.keySet());
             String placeholders = String.join(", ", Collections.nCopies(data.size(), "?"));
             String updates = String.join(", ", data.keySet().stream().map(col -> col + " = ?").toList());
@@ -163,7 +202,13 @@ public class Database {
             }
         }});
     }
-    private final ExecutorService dbExecutor = Executors.newFixedThreadPool(4);
+   @Getter private ExecutorService dbExecutor = Executors.newFixedThreadPool(4);
+    public void restartExecutor() {
+        if (this.dbExecutor != null && !this.dbExecutor.isShutdown()) {
+            this.dbExecutor.shutdownNow();
+        }
+        this.dbExecutor = Executors.newFixedThreadPool(4);
+    }
     public boolean playerExists(String table, UUID uuid) {
         String sql = "SELECT uuid FROM " + table + " WHERE uuid = ?;";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

@@ -54,18 +54,12 @@ public class ClickHandler implements Listener {
         if (clickedInventory == null || !(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-
         Inventory topInventory = event.getInventory();
         if (!(topInventory.getHolder() instanceof Menus menu)) {
             return;
         }
-
-
         if (event.isShiftClick() && clickedInventory.equals(player.getInventory())) {
             boolean foundSellZone = false;
-
-
-
             for (MenuButtons button : menu.getButtons()) {
                 if (button.isSellZone()) {
                     ItemStack itemInSlot = topInventory.getItem(button.getSlotButton());
@@ -75,14 +69,11 @@ public class ClickHandler implements Listener {
                     }
                 }
             }
-
             if (!foundSellZone) {
                 event.setCancelled(true);
                 return;
             }
         }
-
-
         double totalMoney = 0;
         double totalScores = 0;
         double finalTotalScores = totalScores;
@@ -99,7 +90,6 @@ public class ClickHandler implements Listener {
                     }
                 }
             }
-
             sellZone.checkItem(itemStacks, plugin.getItemPrice(), player);
             for (MenuButtons btn : menu.getButtons()) {
                 menusManager.updateMenu(btn,
@@ -108,9 +98,6 @@ public class ClickHandler implements Listener {
                         player);
             }
         }, 10L);
-
-
-
         boolean isSellZoneSlot = false;
         for (MenuButtons button : menu.getButtons()) {
             if (button.isSellZone() && event.getSlot() == button.getSlotButton()) {
@@ -118,49 +105,34 @@ public class ClickHandler implements Listener {
                 break;
             }
         }
-
         if (!isSellZoneSlot) event.setCancelled(true);
-
         if (clickedInventory.equals(topInventory)) {
-
             for (MenuButtons button : menu.getButtons()) {
                 if (event.getSlot() == button.getSlotButton()) {
-
-
                     if (button.isSellZone()) return;
-
-
                     List<String> allCommands = button.getAllCommands();
-
                     for (String command : allCommands) {
                         if (command.equalsIgnoreCase("[sell_all]")) {
                             event.setCancelled(true);
-
                             List<ItemStack> itemsToRemove = new ArrayList<>();
-
                             for (MenuButtons btn : menu.getButtons()) {
                                 if (btn.isSellZone()) {
                                     ItemStack item = topInventory.getItem(btn.getSlotButton());
                                     if (item != null) {
-
                                         boolean isRegularItem = isIsRegularItem(item);
-
                                         if (isRegularItem) {
                                             PriseItemLoader.ItemData itemData = plugin.getItemPrice(item.getType().name());
                                             if (itemData != null) {
                                                 double price = itemData.price() * boostManager.getPlayerCoefficient(player);
                                                 int addScores = itemData.addScores();
-
                                                 totalMoney += price * item.getAmount();
                                                 totalScores += addScores * item.getAmount();
                                                 itemsToRemove.add(item);
-
                                             }
                                         }
                                     }
                                 }
                             }
-
                             for (ItemStack item : itemsToRemove) {
                                 for (MenuButtons btn : menu.getButtons()) {
                                     if (btn.isSellZone() && item.equals(topInventory.getItem(btn.getSlotButton()))) {
@@ -169,12 +141,11 @@ public class ClickHandler implements Listener {
                                     }
                                 }
                             }
-
                             if (totalMoney > 0 || totalScores > 0) {
                                 plugin.getEconomy().depositPlayer(player, totalMoney);
                                 boostManager.addPlayerScores(player, totalScores);
                                 player.sendMessage(hex(CFG().getString("completeSaleMessage", "&eВы продали предметы на сумму: &a%sell_pay% &eи получили &b%sell_score% очков")
-                                        .replace("%sell_pay%", String.valueOf(totalMoney))
+                                        .replace("%sell_pay%", String.valueOf(df.format(totalMoney)))
                                         .replace("%sell_score%", String.valueOf(totalScores))));
                             } else {
                                 player.sendMessage(hex(CFG().getString("noItemsToSellMessage", "У вас нет предметов для продажи")));
@@ -182,25 +153,18 @@ public class ClickHandler implements Listener {
                         } else {
                             event.setCancelled(true);
                             Map<ClickType, List<String>> commandsMap = button.getCommands();
-
                             if (commandsMap==null) {
                                 return;
                             }
-
                             ClickType clickType = event.getClick();
-                            
                             List<String> commands = commandsMap.get(clickType);
-
                             if (commands==null) {
                                 return;
                             }
-
                             for (String actions : commands) {
                                 executeCommand(player, actions, button);
                             }
-
                         }
-
                         break;
                     }
                     return;
@@ -212,7 +176,6 @@ public class ClickHandler implements Listener {
 
     public static boolean isIsRegularItem(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
-
         return meta != null &&
                 !(meta.hasDisplayName() && !meta.getDisplayName().isEmpty()) &&
                 !meta.hasLore() &&
@@ -226,21 +189,17 @@ public class ClickHandler implements Listener {
         int totalScores = 0;
         ItemStack air = new ItemStack(Material.AIR);
         Material targetType = itemStack.getType();
-
         if (type.equalsIgnoreCase("all")) {
             for (ItemStack var : player.getInventory().getContents()) {
                 if (var != null && targetType.equals(var.getType())) {
                     int amount = var.getAmount();
-
                     PriseItemLoader.ItemData itemData = plugin.getItemPrice(targetType.name());
                     if (itemData != null && itemData.price() > 0d) {
                         double totalPrice = itemData.price() * amount;
                         int scores = itemData.addScores() * amount;
-
                         plugin.getEconomy().depositPlayer(player, totalPrice);
                         sumCount += totalPrice * boostManager.getPlayerCoefficient(player);
                         totalScores += scores;
-
                         player.getInventory().removeItem(new ItemStack(targetType, amount));
                     }
                 }
@@ -253,20 +212,16 @@ public class ClickHandler implements Listener {
                 player.sendMessage("§cОшибка: неверный формат количества. Укажите число или 'all'.");
                 return;
             }
-
             for (ItemStack var : player.getInventory().getContents()) {
                 if (var != null && targetType.equals(var.getType()) && var.getAmount() >= amount) {
                     ItemStack item = new ItemStack(targetType, amount);
                     PriseItemLoader.ItemData itemData = plugin.getItemPrice(targetType.name());
-
                     if (itemData != null && itemData.price() > 0d) {
                         double totalPrice = itemData.price() * amount;
                         int scores = itemData.addScores() * amount;
-
                         plugin.getEconomy().depositPlayer(player, totalPrice);
                         sumCount += totalPrice * boostManager.getPlayerCoefficient(player);
                         totalScores += scores;
-
                         PlayerInventory inv = player.getInventory();
                         if (player.getEquipment().getItemInOffHand() != null && player.getEquipment().getItemInOffHand().isSimilar(item))
                             player.getEquipment().setItemInOffHand(air);
@@ -274,23 +229,20 @@ public class ClickHandler implements Listener {
                         if (inv.getChestplate() != null && inv.getChestplate().isSimilar(item)) inv.setChestplate(air);
                         if (inv.getLeggings() != null && inv.getLeggings().isSimilar(item)) inv.setLeggings(air);
                         if (inv.getBoots() != null && inv.getBoots().isSimilar(item)) inv.setBoots(air);
-
                         inv.removeItem(item);
                     }
                     break;
                 }
             }
         }
-
         if (sumCount > 0d) {
-            player.sendMessage(hex(CFG().getString("autoBuy.message", "&aВы успешно продали все предметы на сумму &f%sum%")
-                    .replace("%sum%", String.valueOf(sumCount))
+            player.sendMessage(hex(CFG().getString("completeSaleMessage", "&aВы успешно продали все предметы на сумму &f%sum%")
+                    .replace("%sum%", String.valueOf(df.format(sumCount)))
                     .replace("%score%", String.valueOf(totalScores))
             ));
         } else {
-            player.sendMessage(CFG().getString("noItemsToSellMessage", "§cУ вас не достаточно предметов для продажи."));
+            player.sendMessage(hex(CFG().getString("noItemsToSellMessage", "§cУ вас не достаточно предметов для продажи.")));
         }
-
         if (totalScores > 0) {
             boostManager.addPlayerScores(player, totalScores);
         }
@@ -305,33 +257,22 @@ public class ClickHandler implements Listener {
             return;
         }
         UUID playerId = player.getUniqueId();
-
         switch (command.toLowerCase()) {
-
             case "[autobuy_item_toggle]": {
                 String materialName = button.getMaterialButton().name();
-
                 autoBuyManager.getPlayerData(plugin, playerId).toggleItem(materialName);
-
                 menusManager.updateMenu(button, player.getOpenInventory().getTopInventory(),
                         sellZone.getCountPlayerString(playerId, 0), player);
-
                 break;
             }
-
-
-
             case "[autobuy_status_toggle]": {
                 autoBuyManager.getPlayerData(plugin, playerId).setAutoBuyEnabled(
                         !autoBuyManager.getPlayerData(plugin, playerId).isAutoBuyEnabled()
                 );
-
                 menusManager.updateMenu(button, player.getOpenInventory().getTopInventory(),
                         sellZone.getCountPlayerString(playerId, 0), player);
                 break;
             }
-
-
             case "[enable_all]": {
                 for (ItemStack content : player.getOpenInventory().getTopInventory().getContents()) {
                     if (content == null) continue;
@@ -344,8 +285,6 @@ public class ClickHandler implements Listener {
                         sellZone.getCountPlayerString(playerId, 0), player);
                 break;
             }
-
-
             case "[disable_all]": {
                 for (ItemStack content : player.getOpenInventory().getTopInventory().getContents()) {
                     if (content == null) continue;
@@ -356,7 +295,6 @@ public class ClickHandler implements Listener {
                 }
                 break;
             }
-
             default: {
                 plugin.getActions().execute(player, command);
                 break;
@@ -369,27 +307,21 @@ public class ClickHandler implements Listener {
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
         Inventory topInventory = event.getInventory();
-
         if (!(topInventory.getHolder() instanceof Menus menu)) {
             return;
         }
-
         Player player = (Player) event.getWhoClicked();
-
         for (Integer slot : event.getRawSlots()) {
             if (slot >= topInventory.getSize()) {
                 continue;
             }
-
             boolean isAllowedSlot = false;
-
             for (MenuButtons button : menu.getButtons()) {
                 if (slot.equals(button.getSlotButton()) && button.isSellZone()) {
                     isAllowedSlot = true;
                     break;
                 }
             }
-
             if (!isAllowedSlot) {
                 event.setCancelled(true);
                 return;
@@ -400,7 +332,6 @@ public class ClickHandler implements Listener {
         for (int i = 0; i < topInventory.getSize(); i++) {
             ItemStack itemStack = topInventory.getItem(i);
             if (itemStack != null) {
-
                 for (MenuButtons btn : menu.getButtons()) {
                     if (btn.getSlotButton() == i && btn.isSellZone()) {
                         itemStacks.add(itemStack);
@@ -413,7 +344,6 @@ public class ClickHandler implements Listener {
         for (MenuButtons btn : menu.getButtons()) {
             menusManager.updateMenu(btn, topInventory, sellZone.getCountPlayerString(player.getUniqueId(), 0), player);
         }
-
     }
 
     @EventHandler
@@ -424,7 +354,6 @@ public class ClickHandler implements Listener {
         if (!(topInventory.getHolder() instanceof Menus menu)) {
             return;
         }
-
         menu.getButtons().stream()
                 .filter(MenuButtons::isSellZone)
                 .forEach(button -> {
@@ -441,10 +370,5 @@ public class ClickHandler implements Listener {
 
         sellZone.getCountPlayer().remove(playerUUID);
     }
-
     public static NamespacedKey NAMESPACED_KEY = new NamespacedKey("treexbuyer", "key");
-
-
-
-
 }

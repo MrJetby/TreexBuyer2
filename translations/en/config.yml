@@ -1,0 +1,50 @@
+mysql:
+  enabled: false
+  host: "localhost"
+  port: 3306
+  database: "treexbuyer"
+  username: "root"
+  password: ""
+
+logger: false
+
+priceItem:
+  path: priceItem.yml
+
+menu:
+  seller:
+    path: Menu/seller.yml
+
+  mobs:
+    path: Menu/mobs.yml
+  mine:
+    path: Menu/mine.yml
+
+
+autoBuyDelay: 60 # In ticks. How often AutoBuy will be triggered. Default is 60 - 3 seconds
+
+autoBuy:
+  enable: "&aOn"
+  disable: "&cOff"
+  message: "&eItems sold for: &a%sum% &eand received &b%score% points"
+  disabled-worlds:
+    - duel-1
+    - duel-2
+
+#########################[Сообщения]#######################
+completeSaleMessage: '&eYou sold items for: &a%sell_pay% &eand received &b%sell_score% points'
+noItemsToSellMessage: 'You have no items to sell.'
+
+# for every 100 points the player will receive +0.1 to the coefficient
+score-to-multiplier-ratio:
+  scores: 100
+  coefficient: 0.01
+
+# maximum coefficient (excluding donation boosts)
+max-legal-coefficient: 3
+default-coefficient: 1
+booster:
+  donat-1: # name (can be any)
+    permission: 'buyer.boost.donat1' # (permission by which the presence of a boost will be determined)
+    external-coefficient: 0.5
+

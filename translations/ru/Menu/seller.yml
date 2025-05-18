@@ -1,0 +1,106 @@
+####################################################################################################
+#
+# Все команды
+#
+# [MESSAGE] Отправить игроку текст
+#
+# [PLAYER] Выполнить команду от имени игрока
+#
+# [CONSOLE] Выполнять команду от имени консоли
+#
+# [ACTIONBAR] Отправить игроку текст в actionbar
+#
+# [SOUND] Произвести игроку звук
+#
+# [EFFECT] Дать игроку эффект
+#
+# [TITLE] Отправить игроку тайтл, чтобы отправить субтайтл используйте символ ";"
+# Например: [TITLE] First;Second
+#
+# [OPEN_MENU] Открыть игроку меню
+#
+# [AUTOBUY_ITEM_TOGGLE]
+#
+# [AUTOBUY_STATUS_TOGGLE]
+#
+# [ENABLE_ALL]
+#
+# [DISABLE_ALL]
+#
+# [SELL_ITEM] <amount>/all
+#
+# [SELL_ALL]
+#
+# [SELL_ZONE]
+#
+####################################################################################################
+#
+# Типы кликов
+#
+# left_click_commands
+# right_click_commands
+# shift_left_click_commands
+# shift_right_click_commands
+# click_commands
+# drop_commands
+#
+####################################################################################################
+#
+# Плейсхолдеры:
+#
+# %price%
+# %coefficient%
+# %score%
+# %seller_pay%
+# %price_with_coefficient%
+# %auto_sell_toggle_state%
+# %global_auto_sell_toggle_state%
+#
+####################################################################################################
+
+
+
+title: Скупщик
+open_commands:
+  - 'seller'
+  - 'buyer'
+open_permission: none
+size: 54
+Items:
+  zone:
+    material: STONE
+    slot: 0-44
+    display_name: ' '
+    click_commands:
+      - '[sell_zone]'
+
+  background:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 46-52
+    display_name: ' '
+
+  sell:
+    material: LIME_DYE
+    slot: 53
+    display_name: ' '
+    lore:
+      - ' &fНажмите чтобы сдать все предметы '
+      - ' &fПредметов на сумму: &6$%sell_pay% '
+      - ''
+    click_commands:
+      - '[sell_all]'
+  category:
+    material: MINECART
+    slot: 45
+    display_name: ' '
+    lore:
+      - ' &fТекующий коэффицент: &6x%coefficient%'
+      - ' &fОчков: &6%score%'
+      - ' '
+      - ' &6Настройка авто-скупки '
+      - ' '
+    click_commands:
+      - '[open_menu] mine'
+
+
+

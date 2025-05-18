@@ -1,0 +1,106 @@
+####################################################################################################
+#
+# Commands
+#
+# [MESSAGE] Send text to player
+#
+# [PLAYER] Execute command on behalf of the player
+#
+# [CONSOLE] Run command on behalf of console
+#
+# [ACTIONBAR] Send text to player in actionbar
+#
+# [SOUND] Play a sound for the player
+#
+# [EFFECT] Give the player an effect
+#
+# [TITLE] Send the player a title, to send a subtitle use the symbol ";"
+## For example: [TITLE] First;Second
+#
+# [OPEN_MENU] Open the menu for the player
+#
+# [AUTOBUY_ITEM_TOGGLE]
+#
+# [AUTOBUY_STATUS_TOGGLE]
+#
+# [ENABLE_ALL]
+#
+# [DISABLE_ALL]
+#
+# [SELL_ITEM] <amount>/all
+#
+# [SELL_ALL]
+#
+# [SELL_ZONE]
+#
+####################################################################################################
+#
+# Click types
+#
+# left_click_commands
+# right_click_commands
+# shift_left_click_commands
+# shift_right_click_commands
+# click_commands
+# drop_commands
+#
+####################################################################################################
+#
+# Placeholders:
+#
+# %price%
+# %coefficient%
+# %score%
+# %seller_pay%
+# %price_with_coefficient%
+# %auto_sell_toggle_state%
+# %global_auto_sell_toggle_state%
+#
+####################################################################################################
+
+
+
+title: Скупщик
+open_commands:
+  - 'seller'
+  - 'buyer'
+open_permission: none
+size: 54
+Items:
+  zone:
+    material: STONE
+    slot: 0-44
+    display_name: ' '
+    click_commands:
+      - '[sell_zone]'
+
+  background:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 46-52
+    display_name: ' '
+
+  sell:
+    material: LIME_DYE
+    slot: 53
+    display_name: ' '
+    lore:
+      - ' &fClick to submit all items '
+      - ' &fItems worth: &6$%sell_pay% '
+      - ''
+    click_commands:
+      - '[sell_all]'
+  category:
+    material: MINECART
+    slot: 45
+    display_name: ' '
+    lore:
+      - ' &fCurrent ratio: &6x%coefficient%'
+      - ' &fScores: &6%score%'
+      - ' '
+      - ' &6Setting up auto-buy '
+      - ' '
+    click_commands:
+      - '[open_menu] mine'
+
+
+

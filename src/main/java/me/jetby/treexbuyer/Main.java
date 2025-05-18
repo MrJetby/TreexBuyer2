@@ -1,6 +1,7 @@
 package me.jetby.treexbuyer;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.jetby.treexbuyer.commands.PluginCommands;
 import me.jetby.treexbuyer.configurations.Config;
 import me.jetby.treexbuyer.configurations.MenuLoader;
@@ -28,6 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static me.jetby.treexbuyer.configurations.Config.CFG;
 
@@ -39,7 +41,7 @@ public final class Main extends JavaPlugin {
     private BoostManager boostManager;
     private SellZone sellZone;
     private MenuLoader menuLoader;
-    private Map<String, PriseItemLoader.ItemData> itemPrice;
+    @Setter private Map<String, PriseItemLoader.ItemData> itemPrice;
     private PriseItemLoader priseItemLoader;
     private AutoBuyManager autoBuyManager;
     private Actions actions;
@@ -104,7 +106,6 @@ public final class Main extends JavaPlugin {
         new Metrics(this, 25141);
     }
     public void createCommand(){
-        // ниже регистрация всех команд
         List<String> commandNames = new ArrayList<>();
         Map<String, Menus> listMenu = menuLoader.getListMenu();
         listMenu.forEach((key, item) -> {
@@ -155,9 +156,16 @@ public final class Main extends JavaPlugin {
         for (UUID uuid : boostManager.getCachedScores().keySet()) {
             boostManager.savePlayerScoresSync(uuid);
         }
-
-        if (getDatabase() != null) {
-            database.closeConnection();
+        try {
+            database.getDbExecutor().shutdown();
+            if (!database.getDbExecutor().awaitTermination(5, TimeUnit.SECONDS)) {
+                database.getDbExecutor().shutdownNow();
+            }
+            if (database.getConnection() != null && !database.getConnection().isClosed()) {
+                database.getConnection().close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         getLogger().warning("[TreexBuyer] Плагин отключён.");
     }

@@ -1,0 +1,270 @@
+####################################################################################################
+#
+# Commands
+#
+# [MESSAGE] Send text to player
+#
+# [PLAYER] Execute command on behalf of the player
+#
+# [CONSOLE] Run command on behalf of console
+#
+# [ACTIONBAR] Send text to player in actionbar
+#
+# [SOUND] Play a sound for the player
+#
+# [EFFECT] Give the player an effect
+#
+# [TITLE] Send the player a title, to send a subtitle use the symbol ";"
+## For example: [TITLE] First;Second
+#
+# [OPEN_MENU] Open the menu for the player
+#
+# [AUTOBUY_ITEM_TOGGLE]
+#
+# [AUTOBUY_STATUS_TOGGLE]
+#
+# [ENABLE_ALL]
+#
+# [DISABLE_ALL]
+#
+# [SELL_ITEM] <amount>/all
+#
+# [SELL_ALL]
+#
+# [SELL_ZONE]
+#
+####################################################################################################
+#
+# Click types
+#
+# left_click_commands
+# right_click_commands
+# shift_left_click_commands
+# shift_right_click_commands
+# click_commands
+# drop_commands
+#
+####################################################################################################
+#
+# Placeholders:
+#
+# %price%
+# %coefficient%
+# %score%
+# %seller_pay%
+# %price_with_coefficient%
+# %auto_sell_toggle_state%
+# %global_auto_sell_toggle_state%
+#
+####################################################################################################
+
+
+title: "&0Resources from the mine"
+
+open_permission: none
+size: 54
+
+
+Items:
+  background:
+    material: BLACK_STAINED_GLASS_PANE
+    slot:
+      - 0-2
+      - 6-17
+      - 36-44
+      - 46-48
+      - 50-52
+    display_name: " "
+
+
+  NETHERITE_INGOT:
+    material: NETHERITE_INGOT
+    slot: 18
+    lore:
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+  NETHERITE_SCRAP:
+    material: NETHERITE_SCRAP
+    slot: 19
+    lore:
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+
+  EMERALD:
+    material: EMERALD
+    slot: 20
+    lore:
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+  DIAMOND:
+    material: DIAMOND
+    slot: 21
+    lore:
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+
+  GOLD_INGOT:
+    material: GOLD_INGOT
+    slot: 22
+    lore:
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+  IRON_INGOT:
+    material: IRON_INGOT
+    slot: 23
+    lore:
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+
+
+  REDSTONE:
+    material: REDSTONE
+    slot: 24
+    lore:
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+
+  LAPIS_LAZULI:
+    material: LAPIS_LAZULI
+    slot: 25
+    lore:
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+
+  COAL:
+    material: COAL
+    slot: 26
+    lore:
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+  QUARTZ:
+    material: QUARTZ
+    slot: 27
+    lore:
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
+      - ''
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
+      - ''
+    click_commands:
+      - '[AUTOBUY_ITEM_TOGGLE]'
+
+
+
+
+
+
+
+  menuMine:
+    material: NETHERITE_INGOT
+    slot: 3
+    display_name: "&6■ &fКатегория: &6Ресурсы из шахты &6■"
+    click_commands:
+      - '[open_menu] mine'
+
+  menuMobs:
+    material: COW_SPAWN_EGG
+    slot: 5
+    display_name: "&6■ &fКатегория: &6Ресурсы с мобов &6■"
+    click_commands:
+      - '[open_menu] mobs'
+
+  back:
+    material: ARROW
+    slot: 49
+    display_name: "&6Вернуться"
+    click_commands:
+      - '[open_menu] seller'
+
+  autobuy:
+    material: SLIME_BALL
+    slot: 4
+    display_name: '&7Авто скупка'
+    lore:
+      - '&r '
+      - '&r &fНажмите чтобы включить/выключить авто скупку'
+      - '&r &fСейчас: %global_auto_sell_toggle_state%'
+      - '&r '
+    click_commands:
+      - '[AUTOBUY_STATUS_TOGGLE]'
+
+
+  disable:
+    material: GRAY_DYE
+    slot: 45
+    display_name: '&cВыключить всё'
+    click_commands:
+      - '[DISABLE_ALL]'
+
+  enable:
+    material: LIME_DYE
+    slot: 53
+    display_name: '&aВключить всё'
+    click_commands:
+      - '[ENABLE_ALL]'
+
+

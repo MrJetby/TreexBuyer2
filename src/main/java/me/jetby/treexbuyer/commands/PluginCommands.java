@@ -14,11 +14,15 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static me.jetby.treexbuyer.configurations.Config.CFG;
 import static me.jetby.treexbuyer.tools.Hex.hex;
 
 public class PluginCommands implements CommandExecutor, TabCompleter {
@@ -63,12 +67,29 @@ public class PluginCommands implements CommandExecutor, TabCompleter {
 
 
             if (plugin.getDatabase() != null) {
-                plugin.getDatabase().closeConnection();
-                plugin.getDatabase().initDatabase();
+                for (UUID uuid : boostManager.getCachedScores().keySet()) {
+                    boostManager.savePlayerScoresSync(uuid);
+                }
+
+                try {
+                    plugin.getDatabase().getDbExecutor().shutdown();
+                    if (!plugin.getDatabase().getDbExecutor().awaitTermination(5, TimeUnit.SECONDS)) {
+                        plugin.getDatabase().getDbExecutor().shutdownNow();
+                    }
+
+                    plugin.getDatabase().restartExecutor();
+                    plugin.getDatabase().initDatabase();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+
 
             plugin.getConfigLoader().reloadCfg(plugin);
             plugin.getPriceItemCfg().reloadCfg(plugin);
+            String path = CFG().getString("priceItem.path", "priceItem.yml");
+            File itemFile = new File(plugin.getDataFolder(), path);
+            plugin.setItemPrice(plugin.getPriseItemLoader().loadItemValuesFromFile(itemFile));
             plugin.getMenuLoader().loadMenus(plugin.getDataFolder());
 
             for (Player player : Bukkit.getOnlinePlayers()) {
