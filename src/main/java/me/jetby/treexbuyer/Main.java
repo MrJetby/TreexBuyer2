@@ -3,10 +3,10 @@ package me.jetby.treexbuyer;
 import lombok.Getter;
 import lombok.Setter;
 import me.jetby.treexbuyer.commands.PluginCommands;
-import me.jetby.treexbuyer.configurations.Config;
 import me.jetby.treexbuyer.configurations.MenuLoader;
 import me.jetby.treexbuyer.configurations.PriceItemCfg;
 import me.jetby.treexbuyer.configurations.PriseItemLoader;
+import me.jetby.treexbuyer.configurations.newcfg.Config;
 import me.jetby.treexbuyer.tools.Database;
 import me.jetby.treexbuyer.listeners.DataLoader;
 import me.jetby.treexbuyer.menus.*;
@@ -22,6 +22,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,8 +31,6 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-
-import static me.jetby.treexbuyer.configurations.Config.CFG;
 
 @Getter
 public final class Main extends JavaPlugin {
@@ -42,25 +41,25 @@ public final class Main extends JavaPlugin {
     private SellZone sellZone;
     private MenuLoader menuLoader;
     @Setter private Map<String, PriseItemLoader.ItemData> itemPrice;
+    @Setter private Map<String, PriseItemLoader.PotionData> potionPrices = new HashMap<>();
     private PriseItemLoader priseItemLoader;
     private AutoBuyManager autoBuyManager;
     private Actions actions;
     private Economy economy;
     private PlaceholderExpansion placeholderExpansion;
-    private Config configLoader;
+
+    private final Config cfg = new Config(this);
 
     private PriceItemCfg priceItemCfg;
 
     @Override
     public void onEnable() {
 
-
-
-        configLoader = new Config();
-        configLoader.loadYamlFile(this);
         priceItemCfg = new PriceItemCfg();
         priceItemCfg.loadYamlFile(this);
 
+        final FileConfiguration configFile = cfg.getFile(getDataFolder().getAbsolutePath(), "config.yml");
+        cfg.load(configFile);
 
         boostManager = new BoostManager(this);
         sellZone = new SellZone(this);
@@ -76,8 +75,7 @@ public final class Main extends JavaPlugin {
         menuLoader.loadMenus(getDataFolder());
 
         priseItemLoader = new PriseItemLoader(this);
-        String path = CFG().getString("priceItem.path", "priceItem.yml");
-        File itemFile = new File(getDataFolder(), path);
+        File itemFile = new File(getDataFolder(), cfg.getPriceItemFile());
         itemPrice = priseItemLoader.loadItemValuesFromFile(itemFile);
 
         setupEconomy();
@@ -93,7 +91,6 @@ public final class Main extends JavaPlugin {
             autoBuyManager.loadPlayerData(player.getUniqueId());
             boostManager.loadPlayersScores(player.getUniqueId());
         }
-        boostManager.loadBoosts();
         getLogger().info("[TreexBuyer] Плагин запущен и готов к работе.");
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -146,6 +143,9 @@ public final class Main extends JavaPlugin {
     }
     public PriseItemLoader.ItemData getItemPrice(String material) {
         return itemPrice.get(material);
+    }
+    public PriseItemLoader.PotionData getPotionPrice(String potionType) {
+        return potionPrices.get(potionType);
     }
     @Override
     public void onDisable() {

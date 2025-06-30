@@ -3,6 +3,7 @@ package me.jetby.treexbuyer.menus;
 import lombok.Getter;
 import me.jetby.treexbuyer.Main;
 import me.jetby.treexbuyer.configurations.PriseItemLoader;
+import me.jetby.treexbuyer.configurations.newcfg.Config;
 import me.jetby.treexbuyer.functions.BoostManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,17 +16,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static me.jetby.treexbuyer.configurations.Config.CFG;
 import static org.bukkit.Bukkit.getLogger;
 
 public class SellZone {
 
     private final BoostManager boostManager;
     private final Main plugin;
+    private final Config config;
 
     public SellZone(Main plugin) {
         this.plugin = plugin;
         this.boostManager = plugin.getBoostManager();
+        this.config = plugin.getCfg();
     }
 
     @Getter
@@ -39,13 +41,13 @@ public class SellZone {
                 Material material = Material.valueOf(key.toUpperCase());
                 materialPrise.put(material, vault.price() * boostManager.getPlayerCoefficient(player));
             } catch (IllegalArgumentException e) {
-                if (CFG().getBoolean("logger")) {
+                if (config.isDebug()) {
                     getLogger().warning("[SellZone] Неизвестный материал: " + key);
                 }
             }
         });
 
-        if (CFG().getBoolean("logger")) {
+        if (config.isDebug()) {
             itemStacks.forEach(item -> plugin.getLogger().info(item.getType() + " : " + item.getAmount()));
         }
 

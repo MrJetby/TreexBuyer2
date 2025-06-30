@@ -2,6 +2,8 @@ package me.jetby.treexbuyer.configurations;
 
 import lombok.Getter;
 import me.jetby.treexbuyer.Main;
+import me.jetby.treexbuyer.configurations.newcfg.Config;
+import me.jetby.treexbuyer.menus.ClickRequirement;
 import me.jetby.treexbuyer.menus.MenuButtons;
 import me.jetby.treexbuyer.menus.Menus;
 import org.bukkit.Bukkit;
@@ -15,15 +17,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static me.jetby.treexbuyer.configurations.Config.CFG;
 
 
 public class MenuLoader {
 
     private final Main plugin;
+    private final Config config;
 
     public MenuLoader(Main plugin) {
         this.plugin = plugin;
+        this.config = plugin.getCfg();
     }
 
     @Getter
@@ -32,9 +35,8 @@ public class MenuLoader {
     public void loadMenus(File dataFolder) {
 
 
-        for (String menuId : CFG().getConfigurationSection("menu").getKeys(false)) {
-            String filePath = CFG().getString("menu." + menuId + ".path");
-            File menuFile = new File(dataFolder, filePath);
+        for (String menuId : config.getMenus().keySet()) {
+            File menuFile = new File(dataFolder, config.getMenus().get(menuId));
 
             if (menuFile.exists()) {
                 loadMenuFromFile(menuId, menuFile);
@@ -64,7 +66,7 @@ public class MenuLoader {
                 String materialName = menuConfig.getString("Items." + buttonKey + ".material");
 
                 Object slotString = menuConfig.get("Items." + buttonKey + ".slot");
-                List<Integer> slots = parseSlots(slotString); // Используем parseSlots для обработки слотов
+                List<Integer> slots = parseSlots(slotString);
 
 
                 String titleButton = menuConfig.getString("Items." + buttonKey + ".display_name");
@@ -107,8 +109,18 @@ public class MenuLoader {
 
                 }
 
+
+                Map<String, ClickRequirement> requirements = loadRequirements(menuConfig, "Items." + buttonKey + ".click_requirement");
+                Map<ClickType, Map<String, ClickRequirement>> clickTypeRequirements = new HashMap<>();
+                clickTypeRequirements.put(ClickType.LEFT, loadRequirements(menuConfig, "Items." + buttonKey + ".left_click_requirement"));
+                clickTypeRequirements.put(ClickType.RIGHT, loadRequirements(menuConfig, "Items." + buttonKey + ".right_click_requirement"));
+                clickTypeRequirements.put(ClickType.SHIFT_LEFT, loadRequirements(menuConfig, "Items." + buttonKey + ".shift_left_click_requirement"));
+                clickTypeRequirements.put(ClickType.SHIFT_RIGHT, loadRequirements(menuConfig, "Items." + buttonKey + ".shift_right_click_requirement"));
+                clickTypeRequirements.put(ClickType.DROP, loadRequirements(menuConfig, "Items." + buttonKey + ".drop_requirement"));
+
                 for (int slot : slots) {
-                    MenuButtons menuButton = new MenuButtons(slot,
+                    MenuButtons menuButton = new MenuButtons(buttonKey,
+                            slot,
                             titleButton,
                             loreButton,
                             materialName,
@@ -116,7 +128,8 @@ public class MenuLoader {
                             oldCommands,
                             hide_enchantments,
                             hide_attributes,
-                            enchanted);
+                            enchanted,
+                            requirements, clickTypeRequirements);
                     buttons.add(menuButton);
                 }
             }
@@ -126,6 +139,24 @@ public class MenuLoader {
         listMenu.put(menuId, menu);
     }
 
+    private Map<String, ClickRequirement> loadRequirements(FileConfiguration config, String path) {
+        Map<String, ClickRequirement> requirements = new HashMap<>();
+        if (config.contains(path)) {
+            for (String reqName : config.getConfigurationSection(path).getKeys(false)) {
+                String type = config.getString(path + "." + reqName + ".type");
+                String input = config.getString(path + "." + reqName + ".input");
+                String permission = config.getString(path + "." + reqName + ".permission");
+                String output = config.getString(path + "." + reqName + ".output");
+                List<String> denyCommands = config.getStringList(path + "." + reqName + ".deny_commands");
+
+                if (type != null && input != null) {
+                    requirements.put(reqName, new ClickRequirement(plugin,
+                            type, input, permission, output, denyCommands));
+                }
+            }
+        }
+        return requirements;
+    }
     private void addCommandsToMap(Map<ClickType, List<String>> map, ClickType clickType, List<String> commands) {
         if (commands != null && !commands.isEmpty()) {
             map.put(clickType, commands);
@@ -136,7 +167,7 @@ public class MenuLoader {
         List<Integer> slots = new ArrayList<>();
 
         if (slotObject instanceof Integer) {
-            slots.add((Integer) slotObject); // Одиночное число
+            slots.add((Integer) slotObject);
         } else if (slotObject instanceof String) {
             String slotString = ((String) slotObject).trim();
             slots.addAll(parseSlotString(slotString));

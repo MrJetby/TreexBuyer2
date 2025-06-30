@@ -2,6 +2,7 @@ package me.jetby.treexbuyer.tools;
 
 import lombok.Getter;
 import me.jetby.treexbuyer.Main;
+import me.jetby.treexbuyer.configurations.newcfg.Config;
 
 import java.io.File;
 import java.sql.*;
@@ -12,7 +13,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 
-import static me.jetby.treexbuyer.configurations.Config.CFG;
 import static org.bukkit.Bukkit.getLogger;
 
 public class Database {
@@ -21,25 +21,27 @@ public class Database {
     private Connection connection;
     private final Main plugin;
     private final boolean useMySQL;
+    private final Config config;
 
     public Database(Main plugin) {
         this.plugin = plugin;
-        this.useMySQL = CFG().getBoolean("mysql.enabled", false);
+        this.config = plugin.getCfg();
+        this.useMySQL = config.isMysql();
     }
 
     public void initDatabase() {
         try {
             if (useMySQL) {
-                String host = CFG().getString("mysql.host", "localhost");
-                int port = CFG().getInt("mysql.port", 3306);
-                String database = CFG().getString("mysql.database", "treexbuyer");
-                String username = CFG().getString("mysql.username", "root");
-                String password = CFG().getString("mysql.password", "");
+                String host = config.getMysqlHost();
+                int port = config.getMysqlPort();
+                String database = config.getMysqlDatabase();
+                String username = config.getMysqlUsername();
+                String password = config.getMysqlPassword();
 
                 String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false&autoReconnect=true";
                 connection = DriverManager.getConnection(url, username, password);
 
-                if (CFG().getBoolean("logger")) {
+                if (config.isDebug()) {
                     plugin.getLogger().info("[TreexBuyer] Подключено к MySQL серверу: " + host);
                 }
             } else {
@@ -49,7 +51,7 @@ public class Database {
                 }
                 connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
 
-                if (CFG().getBoolean("logger")) {
+                if (config.isDebug()) {
                     plugin.getLogger().info("[TreexBuyer] База данных SQLite создана в: " + dbFile.getAbsolutePath());
                 }
             }
@@ -58,7 +60,7 @@ public class Database {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            if (CFG().getBoolean("logger")) {
+            if (config.isDebug()) {
                 plugin.getLogger().warning("[TreexBuyer] Ошибка подключения к базе данных: " + e.getMessage());
             }
         }
@@ -75,7 +77,8 @@ public class Database {
                 stmt.executeUpdate("CREATE TABLE IF NOT EXISTS autobuy (" +
                         "uuid VARCHAR(36) PRIMARY KEY," +
                         "status TINYINT(1) DEFAULT 0," +
-                        "items TEXT" +
+                        "items TEXT," +
+                        "potions TEXT" +
                         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
             } else {
                 stmt.executeUpdate("CREATE TABLE IF NOT EXISTS players (" +
@@ -86,7 +89,8 @@ public class Database {
                 stmt.executeUpdate("CREATE TABLE IF NOT EXISTS autobuy (" +
                         "uuid TEXT PRIMARY KEY," +
                         "status INTEGER DEFAULT 0," +
-                        "items TEXT" +
+                        "items TEXT," +
+                        "potions TEXT" +
                         ");");
             }
         } catch (SQLException e) {
@@ -234,7 +238,7 @@ public class Database {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                if (CFG().getBoolean("logger")) {
+                if (config.isDebug()) {
                     getLogger().info("[TreexBuyer] Подключение к базе данных закрыто.");
                 }
             }

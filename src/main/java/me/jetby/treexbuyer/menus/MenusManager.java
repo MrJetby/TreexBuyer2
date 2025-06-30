@@ -2,6 +2,7 @@ package me.jetby.treexbuyer.menus;
 
 import me.jetby.treexbuyer.Main;
 import me.jetby.treexbuyer.configurations.PriseItemLoader;
+import me.jetby.treexbuyer.configurations.newcfg.Config;
 import me.jetby.treexbuyer.functions.BoostManager;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static me.jetby.treexbuyer.configurations.Config.CFG;
 import static me.jetby.treexbuyer.menus.ClickHandler.NAMESPACED_KEY;
 import static me.jetby.treexbuyer.tools.Hex.hex;
 import static me.jetby.treexbuyer.tools.Hex.setPlaceholders;
@@ -28,12 +28,14 @@ public class MenusManager {
     private final BoostManager boostManager;
     private final SellZone sellZone;
     private final Main plugin;
+    private final Config config;
 
     public MenusManager(Main plugin) {
         this.plugin = plugin;
         this.boostManager = plugin.getBoostManager();
         this.listMenus = plugin.getMenuLoader().listMenu;
         this.sellZone = plugin.getSellZone();
+        this.config = plugin.getCfg();
     }
 
     public void menuCheck() {
@@ -45,14 +47,13 @@ public class MenusManager {
     }
 
     public void updateMenu(MenuButtons button, Inventory topInventory, String counts, Player player) {
-        String count = counts;
         PriseItemLoader.ItemData itemData = plugin.getItemPrice(button.getMaterialButton().name());
         double price = (itemData != null ? itemData.price() : 0);
         double price_with_coefficient = price * boostManager.getPlayerCoefficient(player);
         double coefficient = boostManager.getPlayerCoefficient(player);
         double score = boostManager.getCachedScores(player);
-        String enabled = CFG().getString("autoBuy.enable", "&aВключён");
-        String disabled = CFG().getString("autoBuy.disable", "&cВыключён");
+        String enabled = config.getAutoBuyEnable();
+        String disabled = config.getAutoBuyDisable();
         String global_auto_sell_toggle_string = plugin.getAutoBuyManager().getPlayerData(plugin, player.getUniqueId()).isAutoBuyEnabled() ? enabled : disabled;
         List<String> autoBuyList = plugin.getAutoBuyManager().getPlayerData(plugin, player.getUniqueId()).getItems();
 
@@ -61,7 +62,7 @@ public class MenusManager {
             ItemMeta meta = itemStack.getItemMeta();
             if (meta != null) {
                 if (button.getTitleButton() != null) {
-                    meta.setDisplayName(setInsidePlaceholders(button.getTitleButton(), player, coefficient, score, count, global_auto_sell_toggle_string));
+                    meta.setDisplayName(setInsidePlaceholders(button.getTitleButton(), player, coefficient, score, counts, global_auto_sell_toggle_string));
                 }
                 boolean isSpecialButton = button.getCommand().contains("[AUTOBUY_ITEM_TOGGLE]") ||
                         button.getCommand().contains("[SELL_ALL]");
@@ -69,7 +70,7 @@ public class MenusManager {
                 if (!isSpecialButton) {
                     meta.getPersistentDataContainer().set(NAMESPACED_KEY, PersistentDataType.STRING, "menu_button");
                 }
-                if (autoBuyList != null && autoBuyList.contains(button.getMaterialButton().name())
+                if (button.isEnchanted() || autoBuyList != null && autoBuyList.contains(button.getMaterialButton().name())
                         && !meta.getPersistentDataContainer().has(NAMESPACED_KEY, PersistentDataType.STRING)) {
                     meta.addEnchant(Enchantment.LUCK, 1, true);
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -77,7 +78,7 @@ public class MenusManager {
                     meta.addEnchant(Enchantment.LUCK, 1, true);
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 }
-                meta.setLore(setInsidePlaceholders(button.getLoreButton(), button, player, price, coefficient, score, count, price_with_coefficient, autoBuyList, global_auto_sell_toggle_string));
+                meta.setLore(setInsidePlaceholders(button.getLoreButton(), button, player, price, coefficient, score, counts, price_with_coefficient, autoBuyList, global_auto_sell_toggle_string));
                 itemStack.setItemMeta(meta);
             }
             topInventory.setItem(button.getSlotButton(), itemStack);
@@ -101,8 +102,8 @@ public class MenusManager {
                 .map(s -> s.replace("%sell_pay%", String.valueOf(count)))
                 .map(s -> s.replace("%price_with_coefficient%", String.valueOf(price_with_coefficient)))
                 .map(s -> s.replace("%auto_sell_toggle_state%", hex(autoBuyList != null && autoBuyList.contains(button.getMaterialButton().name())
-                        ? CFG().getString("autoBuy.enable", "&aВключён")
-                        : CFG().getString("autoBuy.disable", "&cВыключён"))))
+                        ? config.getAutoBuyEnable()
+                        : config.getAutoBuyDisable())))
                 .map(s -> s.replace("%global_auto_sell_toggle_state%", hex(global_auto_sell_toggle_string)))
                 .toList();
     }
@@ -117,8 +118,8 @@ public class MenusManager {
         double score = boostManager.getCachedScores(player);
         String count = sellZone.getCountPlayerString(player.getUniqueId(), 0);
         String global_auto_sell_toggle_string = plugin.getAutoBuyManager().getPlayerData(plugin, player.getUniqueId()).isAutoBuyEnabled()
-                ? CFG().getString("autoBuy.enable", "&aВключён")
-                : CFG().getString("autoBuy.disable", "&cВыключён");
+                ? config.getAutoBuyEnable()
+                : config.getAutoBuyDisable();
 
         Inventory inventory = Bukkit.createInventory(menu, menu.getSize(), setInsidePlaceholders(menu.getTitle(), player, coefficient, score, count, global_auto_sell_toggle_string));
         if (!(inventory.getHolder() instanceof Menus)) {

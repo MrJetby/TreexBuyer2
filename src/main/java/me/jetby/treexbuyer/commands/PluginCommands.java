@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +23,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static me.jetby.treexbuyer.configurations.Config.CFG;
 import static me.jetby.treexbuyer.tools.Hex.hex;
 
 public class PluginCommands implements CommandExecutor, TabCompleter {
@@ -84,11 +84,10 @@ public class PluginCommands implements CommandExecutor, TabCompleter {
                 }
             }
 
-
-            plugin.getConfigLoader().reloadCfg(plugin);
+            final FileConfiguration configFile = plugin.getCfg().getFile(String.valueOf(plugin.getDataFolder()), "config.yml");
+            plugin.getCfg().load(configFile);
             plugin.getPriceItemCfg().reloadCfg(plugin);
-            String path = CFG().getString("priceItem.path", "priceItem.yml");
-            File itemFile = new File(plugin.getDataFolder(), path);
+            File itemFile = new File(plugin.getDataFolder(), plugin.getCfg().getPriceItemFile());
             plugin.setItemPrice(plugin.getPriseItemLoader().loadItemValuesFromFile(itemFile));
             plugin.getMenuLoader().loadMenus(plugin.getDataFolder());
 
@@ -96,7 +95,6 @@ public class PluginCommands implements CommandExecutor, TabCompleter {
                 autoBuyManager.loadPlayerData(player.getUniqueId());
                 boostManager.loadPlayersScores(player.getUniqueId());
             }
-            boostManager.loadBoosts();
             plugin.createCommand();
             plugin.setupEconomy();
 

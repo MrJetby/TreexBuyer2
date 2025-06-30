@@ -70,7 +70,7 @@ Items:
     material: BLACK_STAINED_GLASS_PANE
     slot:
       - 0-2
-      - 6-17
+      - 7-17
       - 36-44
       - 46-48
       - 50-52
@@ -221,6 +221,7 @@ Items:
 
   menuMine:
     material: NETHERITE_INGOT
+    enchanted: true
     slot: 3
     display_name: "&6■ &fКатегория: &6Ресурсы из шахты &6■"
     click_commands:
@@ -232,6 +233,13 @@ Items:
     display_name: "&6■ &fКатегория: &6Ресурсы с мобов &6■"
     click_commands:
       - '[open_menu] mobs'
+
+  menuPotions:
+    material: POTION
+    slot: 6
+    display_name: "&6■ &fКатегория: &6Зелья &6■"
+    click_commands:
+      - '[open_menu] potions'
 
   back:
     material: ARROW

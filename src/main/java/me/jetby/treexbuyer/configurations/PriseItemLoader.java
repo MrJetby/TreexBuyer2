@@ -1,6 +1,7 @@
 package me.jetby.treexbuyer.configurations;
 
 import me.jetby.treexbuyer.Main;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -31,10 +32,23 @@ public class PriseItemLoader {
             itemValues.put(key, new ItemData(price, addScores));
         }
 
+        if (fileConfig.contains("POTIONS")) {
+            ConfigurationSection potionSection = fileConfig.getConfigurationSection("POTIONS");
+            for (String potionKey : potionSection.getKeys(false)) {
+                ConfigurationSection section = potionSection.getConfigurationSection(potionKey);
+                int amplifier = section.getInt("amplifier");
+                int price = section.getInt("price");
+                int addScores = section.getInt("add-scores");
+                plugin.getPotionPrices().put(potionKey.toUpperCase(), new PotionData(amplifier, price, addScores));
+            }
+        }
+
         return itemValues;
     }
 
     public record ItemData(double price, int addScores) {
     }
+
+    public record PotionData(int amplifier, int price, int addScores) {}
 
 }

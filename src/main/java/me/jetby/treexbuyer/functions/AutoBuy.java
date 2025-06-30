@@ -63,14 +63,17 @@ public class AutoBuy {
     private void saveItemsAsync() {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             synchronized (database) {
-                String joined = String.join(",", items);
+                String joinedItems = String.join(",", items);
+
                 Map<String, Object> data = new HashMap<>();
-                data.put("items", joined);
+                data.put("items", joinedItems);
                 data.put("status", autoBuyEnabled);
+
                 database.insertOrUpdate("autobuy", uuid, data);
             }
         });
     }
+
 
     public void loadFromDatabase(Runnable onFinish) {
         List<String> loadedItems = database.get("autobuy", uuid, "items", rs -> {
@@ -82,7 +85,6 @@ public class AutoBuy {
                 return new ArrayList<>();
             }
         });
-
         Boolean loadedStatus = database.get("autobuy", uuid, "status", rs -> {
             try {
                 return rs.getBoolean("status");
@@ -100,4 +102,5 @@ public class AutoBuy {
             onFinish.run();
         });
     }
+
 }

@@ -20,8 +20,8 @@ public class MenusCommandRegistrar implements CommandExecutor {
             sender.sendMessage("Команда доступна только игрокам.");
             return true;
         }
-        plugin.getMenusManager().getListMenu().forEach((key, vault) ->{
-            vault.getOpen_commands().forEach(item -> {
+        plugin.getMenusManager().getListMenu().forEach((key, menu) ->{
+            menu.getOpen_commands().forEach(item -> {
                 if (item.equals(label)){
                     plugin.getMenusManager().openMenu(player, key);
                 }

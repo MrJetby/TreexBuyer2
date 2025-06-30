@@ -57,6 +57,16 @@ public class Hex {
         }
         return string;
     }
+
+    public static @NotNull String setPlaceholders(@NotNull String string) {
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            try {
+                return PlaceholderAPI.setPlaceholders(null, string);
+            } catch (Exception ignore) {
+            }
+        }
+        return string;
+    }
     public static String color(String string) {
         return org.bukkit.ChatColor.translateAlternateColorCodes('&', string);
     }

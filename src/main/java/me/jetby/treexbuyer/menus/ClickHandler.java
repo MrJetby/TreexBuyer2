@@ -2,6 +2,7 @@ package me.jetby.treexbuyer.menus;
 
 import me.jetby.treexbuyer.Main;
 import me.jetby.treexbuyer.configurations.PriseItemLoader;
+import me.jetby.treexbuyer.configurations.newcfg.Config;
 import me.jetby.treexbuyer.functions.AutoBuyManager;
 import me.jetby.treexbuyer.functions.BoostManager;
 import org.bukkit.Bukkit;
@@ -26,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static me.jetby.treexbuyer.configurations.Config.CFG;
 import static me.jetby.treexbuyer.tools.Hex.hex;
 
 public class ClickHandler implements Listener {
@@ -36,6 +36,7 @@ public class ClickHandler implements Listener {
     private final MenusManager menusManager;
     private final BoostManager boostManager;
     private final AutoBuyManager autoBuyManager;
+    private final Config config;
 
     public ClickHandler(Main plugin) {
         this.plugin = plugin;
@@ -43,6 +44,7 @@ public class ClickHandler implements Listener {
         this.menusManager = plugin.getMenusManager();
         this.boostManager = plugin.getBoostManager();
         this.autoBuyManager = plugin.getAutoBuyManager();
+        this.config = plugin.getCfg();
     }
 
     private final DecimalFormat df = new DecimalFormat("#.##");
@@ -105,11 +107,22 @@ public class ClickHandler implements Listener {
                 break;
             }
         }
-        if (!isSellZoneSlot) event.setCancelled(true);
+
+        if (!isSellZoneSlot && clickedInventory.equals(topInventory)) {
+            event.setCancelled(true);
+        }
         if (clickedInventory.equals(topInventory)) {
             for (MenuButtons button : menu.getButtons()) {
                 if (event.getSlot() == button.getSlotButton()) {
                     if (button.isSellZone()) return;
+
+                    ClickType clickType = event.getClick();
+
+                    if (!button.checkRequirements(player, clickType)) {
+                        event.setCancelled(true);
+                        return;
+                    }
+
                     List<String> allCommands = button.getAllCommands();
                     for (String command : allCommands) {
                         if (command.equalsIgnoreCase("[sell_all]")) {
@@ -144,11 +157,12 @@ public class ClickHandler implements Listener {
                             if (totalMoney > 0 || totalScores > 0) {
                                 plugin.getEconomy().depositPlayer(player, totalMoney);
                                 boostManager.addPlayerScores(player, totalScores);
-                                player.sendMessage(hex(CFG().getString("completeSaleMessage", "&eВы продали предметы на сумму: &a%sell_pay% &eи получили &b%sell_score% очков")
+
+                                player.sendMessage(config.getSellMsg()
                                         .replace("%sell_pay%", String.valueOf(df.format(totalMoney)))
-                                        .replace("%sell_score%", String.valueOf(totalScores))));
+                                        .replace("%sell_score%", String.valueOf(totalScores)));
                             } else {
-                                player.sendMessage(hex(CFG().getString("noItemsToSellMessage", "У вас нет предметов для продажи")));
+                                player.sendMessage(config.getNoItemsMsg());
                             }
                         } else {
                             event.setCancelled(true);
@@ -156,7 +170,6 @@ public class ClickHandler implements Listener {
                             if (commandsMap==null) {
                                 return;
                             }
-                            ClickType clickType = event.getClick();
                             List<String> commands = commandsMap.get(clickType);
                             if (commands==null) {
                                 return;
@@ -165,7 +178,6 @@ public class ClickHandler implements Listener {
                                 executeCommand(player, actions, button);
                             }
                         }
-                        break;
                     }
                     return;
                 }
@@ -236,12 +248,11 @@ public class ClickHandler implements Listener {
             }
         }
         if (sumCount > 0d) {
-            player.sendMessage(hex(CFG().getString("completeSaleMessage", "&aВы успешно продали все предметы на сумму &f%sum%")
-                    .replace("%sum%", String.valueOf(df.format(sumCount)))
-                    .replace("%score%", String.valueOf(totalScores))
-            ));
+            player.sendMessage(config.getSellMsg()
+                    .replace("%sell_pay%", String.valueOf(df.format(sumCount)))
+                    .replace("%sell_score%", String.valueOf(totalScores)));
         } else {
-            player.sendMessage(hex(CFG().getString("noItemsToSellMessage", "§cУ вас не достаточно предметов для продажи.")));
+            player.sendMessage(config.getNoItemsMsg());
         }
         if (totalScores > 0) {
             boostManager.addPlayerScores(player, totalScores);
@@ -256,6 +267,7 @@ public class ClickHandler implements Listener {
             sell_item(player, withoutCMD, new ItemStack(button.getMaterialButton()));
             return;
         }
+
         UUID playerId = player.getUniqueId();
         switch (command.toLowerCase()) {
             case "[autobuy_item_toggle]": {
@@ -370,5 +382,7 @@ public class ClickHandler implements Listener {
 
         sellZone.getCountPlayer().remove(playerUUID);
     }
+
+
     public static NamespacedKey NAMESPACED_KEY = new NamespacedKey("treexbuyer", "key");
 }

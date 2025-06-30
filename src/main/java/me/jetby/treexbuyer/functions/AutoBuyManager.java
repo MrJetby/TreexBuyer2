@@ -2,8 +2,8 @@ package me.jetby.treexbuyer.functions;
 
 
 import me.jetby.treexbuyer.Main;
-import me.jetby.treexbuyer.configurations.Config;
 import me.jetby.treexbuyer.configurations.PriseItemLoader;
+import me.jetby.treexbuyer.configurations.newcfg.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static me.jetby.treexbuyer.configurations.Config.CFG;
 import static me.jetby.treexbuyer.menus.ClickHandler.isIsRegularItem;
 import static me.jetby.treexbuyer.tools.Hex.hex;
 
@@ -28,10 +27,12 @@ public class AutoBuyManager {
     }
 
     private final Main plugin;
+    private final Config config;
     private final BoostManager boostManager;
     public AutoBuyManager(Main plugin) {
         this.plugin = plugin;
         this.boostManager = plugin.getBoostManager();
+        this.config = plugin.getCfg();
     }
 
     public void loadPlayerData(UUID uuid) {
@@ -50,7 +51,7 @@ public class AutoBuyManager {
     }
 
     private void log(String msg) {
-        if (Config.CFG().getBoolean("logger", true)) {
+        if (config.isDebug()) {
             Bukkit.getLogger().info(msg);
         }
     }
@@ -69,12 +70,12 @@ public class AutoBuyManager {
 
                 delay += 2;
             }
-        }, 0L, CFG().getInt("autoBuyDelay", 60));
+        }, 0L, config.getAutoBuyDelay());
     }
 
     private void checkForItems(Player player) {
 
-        List<String> disabled_worlds = CFG().getStringList("autoBuy.disabled-worlds");
+        List<String> disabled_worlds = config.getAutoBuyDisabledWorlds();
         if (!disabled_worlds.isEmpty()) {
             for (String disabled_world : disabled_worlds) {
                 World world = player.getWorld();
@@ -106,8 +107,8 @@ public class AutoBuyManager {
 
                         if (price > 0d) {
                             double totalPrice = price * item.getAmount();
-                            plugin.getEconomy().depositPlayer(player, totalPrice);
                             sumCount += totalPrice * boostManager.getPlayerCoefficient(player);
+                            plugin.getEconomy().depositPlayer(player, sumCount);
                             totalScores += scores * item.getAmount();
                             if (player.getEquipment().getItemInOffHand()!=null && player.getEquipment().getItemInOffHand().equals(item)) {
                                 player.getEquipment().setItemInOffHand(air);
@@ -134,11 +135,11 @@ public class AutoBuyManager {
         }
 
         if (sumCount > 0d) {
-            player.sendMessage(hex(CFG().getString("autoBuy.message", "&aВы успешно продали все предметы на сумму &f%sum%")
-                    .replace("%sum%", String.valueOf(sumCount))
-                    .replace("%score%", String.valueOf(totalScores))
-
-            ));
+            for (String cmd : config.getAutoBuyActions()) {
+                plugin.getActions().execute(player, cmd
+                        .replace("%sell_pay%", String.valueOf(sumCount))
+                        .replace("%sell_score%", String.valueOf(totalScores)));
+            }
         }
 
         if (totalScores > 0) {

@@ -2,7 +2,7 @@ package me.jetby.treexbuyer.functions;
 
 import lombok.Getter;
 import me.jetby.treexbuyer.Main;
-import me.jetby.treexbuyer.configurations.Config;
+import me.jetby.treexbuyer.configurations.newcfg.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -13,26 +13,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BoostManager {
 
     private final Main plugin;
+    private final Config config;
 
     public BoostManager(Main plugin) {
         this.plugin = plugin;
+        this.config = plugin.getCfg();
     }
 
     @Getter
     private final Map<UUID, Double> cachedScores = new ConcurrentHashMap<>();
-    private final Map<String, Boost> boosts = new HashMap<>();
 
-    public void loadBoosts() {
-        boosts.clear();
-        ConfigurationSection boosterSection = Config.CFG().getConfigurationSection("booster");
-        if (boosterSection != null) {
-            for (String key : boosterSection.getKeys(false)) {
-                String permission = boosterSection.getString(key + ".permission");
-                double coefficient = boosterSection.getDouble(key + ".external-coefficient", 0.0);
-                boosts.put(key, new Boost(key, permission, coefficient));
-            }
-        }
-    }
 
     public void loadPlayersScores(UUID uuid) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -59,33 +49,35 @@ public class BoostManager {
     }
     public void savePlayerScoresSync(UUID uuid) {
         if (!cachedScores.containsKey(uuid)) return;
-            Double score = cachedScores.get(uuid);
-            if (score != null) {plugin.getDatabase().insertOrUpdate("players", uuid, Collections.singletonMap("scores", score));
+            double score = cachedScores.get(uuid);
+            if (score != 0) {plugin.getDatabase().insertOrUpdate("players", uuid, Collections.singletonMap("scores", score));
         }
     }
 
     public double getPlayerCoefficient(Player player) {
-        double defaultCoefficient = Config.CFG().getDouble("default-coefficient", 1.0);
-        double maxLegalCoefficient = Config.CFG().getDouble("max-legal-coefficient", 5.0);
-
+        double defaultCoefficient = config.getDefaultCoefficient();
+        double maxLegalCoefficient = config.getMaxCoefficient();
+        boolean boostersExceptLegal = config.isBoosters_except_legal_coefficient();
         double playerScore = getCachedScores(player);
+        int scoreStep = config.getScores();
+        double coefficientStep = config.getCoefficient();
+        int multiplierCount = (int)(playerScore / scoreStep);
+        double coefficient = defaultCoefficient + multiplierCount * coefficientStep;
+        double baseCoefficient = Math.min(coefficient, maxLegalCoefficient);
+        baseCoefficient = Math.max(baseCoefficient, defaultCoefficient);
+        double boosterCoefficient = 0.0F;
 
-        int scoreStep = Config.CFG().getInt("score-to-multiplier-ratio.scores", 100);
-        double coefficientStep = Config.CFG().getDouble("score-to-multiplier-ratio.coefficient", 0.01);
-
-        int multiplierCount = (int) (playerScore / scoreStep);
-        double coefficient = defaultCoefficient + (multiplierCount * coefficientStep);
-
-        for (Boost boost : boosts.values()) {
+        for(Boost boost : config.getBoosts().values()) {
             if (boost.permission() != null && player.hasPermission(boost.permission())) {
-                coefficient += boost.coefficient();
+                boosterCoefficient += boost.coefficient();
             }
         }
 
-        coefficient = Math.min(coefficient, maxLegalCoefficient);
-        coefficient = Math.max(coefficient, defaultCoefficient);
-
-        return round(coefficient, 2);
+        if (boostersExceptLegal) {
+            return round(baseCoefficient + boosterCoefficient, 2);
+        } else {
+            return round(Math.min(baseCoefficient + boosterCoefficient, maxLegalCoefficient), 2);
+        }
     }
 
     public double getCachedScores(Player player) {
