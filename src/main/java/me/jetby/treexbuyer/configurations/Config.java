@@ -1,4 +1,4 @@
-package me.jetby.treexbuyer.configurations.newcfg;
+package me.jetby.treexbuyer.configurations;
 
 import lombok.Getter;
 import me.jetby.treexbuyer.Main;

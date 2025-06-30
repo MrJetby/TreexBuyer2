@@ -2,7 +2,7 @@ package me.jetby.treexbuyer.tools;
 
 import lombok.Getter;
 import me.jetby.treexbuyer.Main;
-import me.jetby.treexbuyer.configurations.newcfg.Config;
+import me.jetby.treexbuyer.configurations.Config;
 
 import java.io.File;
 import java.sql.*;

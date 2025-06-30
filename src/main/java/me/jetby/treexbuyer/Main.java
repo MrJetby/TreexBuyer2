@@ -6,7 +6,7 @@ import me.jetby.treexbuyer.commands.PluginCommands;
 import me.jetby.treexbuyer.configurations.MenuLoader;
 import me.jetby.treexbuyer.configurations.PriceItemCfg;
 import me.jetby.treexbuyer.configurations.PriseItemLoader;
-import me.jetby.treexbuyer.configurations.newcfg.Config;
+import me.jetby.treexbuyer.configurations.Config;
 import me.jetby.treexbuyer.tools.Database;
 import me.jetby.treexbuyer.listeners.DataLoader;
 import me.jetby.treexbuyer.menus.*;

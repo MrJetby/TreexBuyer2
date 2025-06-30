@@ -2,7 +2,6 @@ package me.jetby.treexbuyer.configurations;
 
 import lombok.Getter;
 import me.jetby.treexbuyer.Main;
-import me.jetby.treexbuyer.configurations.newcfg.Config;
 import me.jetby.treexbuyer.menus.ClickRequirement;
 import me.jetby.treexbuyer.menus.MenuButtons;
 import me.jetby.treexbuyer.menus.Menus;

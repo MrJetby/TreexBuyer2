@@ -2,9 +2,8 @@ package me.jetby.treexbuyer.functions;
 
 import lombok.Getter;
 import me.jetby.treexbuyer.Main;
-import me.jetby.treexbuyer.configurations.newcfg.Config;
+import me.jetby.treexbuyer.configurations.Config;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.*;

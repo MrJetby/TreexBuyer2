@@ -2,7 +2,7 @@ package me.jetby.treexbuyer.menus;
 
 import me.jetby.treexbuyer.Main;
 import me.jetby.treexbuyer.configurations.PriseItemLoader;
-import me.jetby.treexbuyer.configurations.newcfg.Config;
+import me.jetby.treexbuyer.configurations.Config;
 import me.jetby.treexbuyer.functions.BoostManager;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
@@ -16,7 +16,6 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import static me.jetby.treexbuyer.menus.ClickHandler.NAMESPACED_KEY;
 import static me.jetby.treexbuyer.tools.Hex.hex;

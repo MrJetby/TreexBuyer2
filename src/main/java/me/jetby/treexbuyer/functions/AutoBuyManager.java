@@ -3,7 +3,7 @@ package me.jetby.treexbuyer.functions;
 
 import me.jetby.treexbuyer.Main;
 import me.jetby.treexbuyer.configurations.PriseItemLoader;
-import me.jetby.treexbuyer.configurations.newcfg.Config;
+import me.jetby.treexbuyer.configurations.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -16,7 +16,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static me.jetby.treexbuyer.menus.ClickHandler.isIsRegularItem;
-import static me.jetby.treexbuyer.tools.Hex.hex;
 
 public class AutoBuyManager {
 
