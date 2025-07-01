@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -20,6 +21,7 @@ import static me.jetby.treexbuyer.menus.ClickHandler.isIsRegularItem;
 public class AutoBuyManager {
 
     private static final Map<UUID, AutoBuy> players = new ConcurrentHashMap<>();
+    private final DecimalFormat df = new DecimalFormat("#.##");
 
     public AutoBuy getPlayerData(Main plugin, UUID uuid) {
         return players.computeIfAbsent(uuid, id -> new AutoBuy(id, plugin));
@@ -136,7 +138,7 @@ public class AutoBuyManager {
         if (sumCount > 0d) {
             for (String cmd : config.getAutoBuyActions()) {
                 plugin.getActions().execute(player, cmd
-                        .replace("%sell_pay%", String.valueOf(sumCount))
+                        .replace("%sell_pay%", String.valueOf(df.format(sumCount)))
                         .replace("%sell_score%", String.valueOf(totalScores)));
             }
         }

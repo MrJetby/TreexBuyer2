@@ -1,23 +1,23 @@
 ####################################################################################################
 #
-# Все команды
+# Commands
 #
-# [MESSAGE] Отправить игроку текст
+# [MESSAGE] Send text to player
 #
-# [PLAYER] Выполнить команду от имени игрока
+# [PLAYER] Execute command on behalf of the player
 #
-# [CONSOLE] Выполнять команду от имени консоли
+# [CONSOLE] Run command on behalf of console
 #
-# [ACTIONBAR] Отправить игроку текст в actionbar
+# [ACTIONBAR] Send text to player in actionbar
 #
-# [SOUND] Произвести игроку звук
+# [SOUND] Play a sound for the player
 #
-# [EFFECT] Дать игроку эффект
+# [EFFECT] Give the player an effect
 #
-# [TITLE] Отправить игроку тайтл, чтобы отправить субтайтл используйте символ ";"
-# Например: [TITLE] First;Second
+# [TITLE] Send the player a title, to send a subtitle use the symbol ";"
+## For example: [TITLE] First;Second
 #
-# [OPEN_MENU] Открыть игроку меню
+# [OPEN_MENU] Open the menu for the player
 #
 # [AUTOBUY_ITEM_TOGGLE]
 #
@@ -35,7 +35,7 @@
 #
 ####################################################################################################
 #
-# Типы кликов
+# Click types
 #
 # left_click_commands
 # right_click_commands
@@ -46,7 +46,7 @@
 #
 ####################################################################################################
 #
-# Плейсхолдеры:
+# Placeholders:
 #
 # %price%
 # %coefficient%
@@ -59,7 +59,7 @@
 ####################################################################################################
 
 
-title: "&0Ресурсы с шахты"
+title: "&0Resources from the mine"
 
 open_permission: none
 size: 54
@@ -70,7 +70,7 @@ Items:
     material: BLACK_STAINED_GLASS_PANE
     slot:
       - 0-2
-      - 7-17
+      - 6-17
       - 36-44
       - 46-48
       - 50-52
@@ -81,11 +81,11 @@ Items:
     material: NETHERITE_INGOT
     slot: 18
     lore:
-      - ' &fИзначальная Цена &a&l$%price% '
-      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
       - ''
-      - ' &7Кликните чтобы переключить авто скупку'
-      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
       - ''
     click_commands:
       - '[AUTOBUY_ITEM_TOGGLE]'
@@ -94,11 +94,11 @@ Items:
     material: NETHERITE_SCRAP
     slot: 19
     lore:
-      - ' &fИзначальная Цена &a&l$%price% '
-      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
       - ''
-      - ' &7Кликните чтобы переключить авто скупку'
-      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
       - ''
     click_commands:
       - '[AUTOBUY_ITEM_TOGGLE]'
@@ -108,11 +108,11 @@ Items:
     material: EMERALD
     slot: 20
     lore:
-      - ' &fИзначальная Цена &a&l$%price% '
-      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
       - ''
-      - ' &7Кликните чтобы переключить авто скупку'
-      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
       - ''
     click_commands:
       - '[AUTOBUY_ITEM_TOGGLE]'
@@ -121,11 +121,11 @@ Items:
     material: DIAMOND
     slot: 21
     lore:
-      - ' &fИзначальная Цена &a&l$%price% '
-      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
       - ''
-      - ' &7Кликните чтобы переключить авто скупку'
-      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
       - ''
     click_commands:
       - '[AUTOBUY_ITEM_TOGGLE]'
@@ -135,11 +135,11 @@ Items:
     material: GOLD_INGOT
     slot: 22
     lore:
-      - ' &fИзначальная Цена &a&l$%price% '
-      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
       - ''
-      - ' &7Кликните чтобы переключить авто скупку'
-      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
       - ''
     click_commands:
       - '[AUTOBUY_ITEM_TOGGLE]'
@@ -148,11 +148,11 @@ Items:
     material: IRON_INGOT
     slot: 23
     lore:
-      - ' &fИзначальная Цена &a&l$%price% '
-      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
       - ''
-      - ' &7Кликните чтобы переключить авто скупку'
-      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
       - ''
     click_commands:
       - '[AUTOBUY_ITEM_TOGGLE]'
@@ -163,11 +163,11 @@ Items:
     material: REDSTONE
     slot: 24
     lore:
-      - ' &fИзначальная Цена &a&l$%price% '
-      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
       - ''
-      - ' &7Кликните чтобы переключить авто скупку'
-      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
       - ''
     click_commands:
       - '[AUTOBUY_ITEM_TOGGLE]'
@@ -177,11 +177,11 @@ Items:
     material: LAPIS_LAZULI
     slot: 25
     lore:
-      - ' &fИзначальная Цена &a&l$%price% '
-      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
       - ''
-      - ' &7Кликните чтобы переключить авто скупку'
-      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
       - ''
     click_commands:
       - '[AUTOBUY_ITEM_TOGGLE]'
@@ -191,11 +191,11 @@ Items:
     material: COAL
     slot: 26
     lore:
-      - ' &fИзначальная Цена &a&l$%price% '
-      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
       - ''
-      - ' &7Кликните чтобы переключить авто скупку'
-      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
       - ''
     click_commands:
       - '[AUTOBUY_ITEM_TOGGLE]'
@@ -204,11 +204,11 @@ Items:
     material: QUARTZ
     slot: 27
     lore:
-      - ' &fИзначальная Цена &a&l$%price% '
-      - ' &fТекущая Цена &c&l$%price_with_coefficient%'
+      - ' &fOriginal Price &a&l$%price% '
+      - ' &fCurrent Price &c&l$%price_with_coefficient%'
       - ''
-      - ' &7Кликните чтобы переключить авто скупку'
-      - ' &7Сейчас %auto_sell_toggle_state%'
+      - ' &7Click to toggle auto buy'
+      - ' &7Status: %auto_sell_toggle_state%'
       - ''
     click_commands:
       - '[AUTOBUY_ITEM_TOGGLE]'
@@ -221,7 +221,6 @@ Items:
 
   menuMine:
     material: NETHERITE_INGOT
-    enchanted: true
     slot: 3
     display_name: "&6■ &fКатегория: &6Ресурсы из шахты &6■"
     click_commands:
@@ -233,13 +232,6 @@ Items:
     display_name: "&6■ &fКатегория: &6Ресурсы с мобов &6■"
     click_commands:
       - '[open_menu] mobs'
-
-  menuPotions:
-    material: POTION
-    slot: 6
-    display_name: "&6■ &fКатегория: &6Зелья &6■"
-    click_commands:
-      - '[open_menu] potions'
 
   back:
     material: ARROW

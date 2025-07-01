@@ -7,14 +7,12 @@ import me.jetby.treexbuyer.configurations.MenuLoader;
 import me.jetby.treexbuyer.configurations.PriceItemCfg;
 import me.jetby.treexbuyer.configurations.PriseItemLoader;
 import me.jetby.treexbuyer.configurations.Config;
-import me.jetby.treexbuyer.tools.Database;
+import me.jetby.treexbuyer.tools.*;
 import me.jetby.treexbuyer.listeners.DataLoader;
 import me.jetby.treexbuyer.menus.*;
 import me.jetby.treexbuyer.menus.actions.Actions;
 import me.jetby.treexbuyer.functions.AutoBuyManager;
 import me.jetby.treexbuyer.functions.BoostManager;
-import me.jetby.treexbuyer.tools.Metrics;
-import me.jetby.treexbuyer.tools.PlaceholderExpansion;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -55,6 +53,9 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
 
+        Version version = new Version(this);
+
+
         priceItemCfg = new PriceItemCfg();
         priceItemCfg.loadYamlFile(this);
 
@@ -83,9 +84,9 @@ public final class Main extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new DataLoader(this), this);
         getServer().getPluginManager().registerEvents(new ClickHandler(this), this);
+        getServer().getPluginManager().registerEvents(version, this);
 
         getCommand("treexbuyer").setExecutor(new PluginCommands(this));
-        getCommand("treexbuyer").setTabCompleter(new PluginCommands(this));
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             autoBuyManager.loadPlayerData(player.getUniqueId());
@@ -99,6 +100,12 @@ public final class Main extends JavaPlugin {
         } else {
             getLogger().warning("PlaceholderAPI не обнаружен! Некоторые функции могут быть недоступны.");
         }
+
+        for (String string : version.getAlert()) {
+            Logger.info(string);
+        }
+
+        Logger.success("Плагин готов к работе!");
 
         new Metrics(this, 25141);
     }

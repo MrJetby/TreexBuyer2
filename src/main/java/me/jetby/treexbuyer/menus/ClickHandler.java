@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static me.jetby.treexbuyer.tools.Hex.hex;
+
 public class ClickHandler implements Listener {
 
     private final Main plugin;
@@ -156,11 +158,11 @@ public class ClickHandler implements Listener {
                                 plugin.getEconomy().depositPlayer(player, totalMoney);
                                 boostManager.addPlayerScores(player, totalScores);
 
-                                player.sendMessage(config.getSellMsg()
+                                player.sendMessage(hex(config.getSellMsg()
                                         .replace("%sell_pay%", String.valueOf(df.format(totalMoney)))
-                                        .replace("%sell_score%", String.valueOf(totalScores)));
+                                        .replace("%sell_score%", String.valueOf(totalScores))));
                             } else {
-                                player.sendMessage(config.getNoItemsMsg());
+                                player.sendMessage(hex(config.getNoItemsMsg()));
                             }
                         } else {
                             event.setCancelled(true);
@@ -176,6 +178,7 @@ public class ClickHandler implements Listener {
                                 executeCommand(player, actions, button);
                             }
                         }
+                        break;
                     }
                     return;
                 }
@@ -246,11 +249,11 @@ public class ClickHandler implements Listener {
             }
         }
         if (sumCount > 0d) {
-            player.sendMessage(config.getSellMsg()
+            player.sendMessage(hex(config.getSellMsg()
                     .replace("%sell_pay%", String.valueOf(df.format(sumCount)))
-                    .replace("%sell_score%", String.valueOf(totalScores)));
+                    .replace("%sell_score%", String.valueOf(totalScores))));
         } else {
-            player.sendMessage(config.getNoItemsMsg());
+            player.sendMessage(hex(config.getNoItemsMsg()));
         }
         if (totalScores > 0) {
             boostManager.addPlayerScores(player, totalScores);

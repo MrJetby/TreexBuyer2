@@ -1,4 +1,4 @@
-# Обычная стоимость предметов
+# Normal cost of items
 NETHERITE_INGOT:
   price: 10000
   add-scores: 250

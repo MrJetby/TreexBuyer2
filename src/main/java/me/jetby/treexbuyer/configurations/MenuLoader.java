@@ -41,7 +41,7 @@ public class MenuLoader {
                 loadMenuFromFile(menuId, menuFile);
             } else {
                 plugin.getDataFolder().mkdirs();
-                plugin.saveResource("Menu/"+menuId+".yml", true);
+                plugin.saveResource("translations/ru/Menu/" +menuId+".yml", true);
                 loadMenuFromFile(menuId, menuFile);
             }
         }

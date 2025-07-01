@@ -20,32 +20,32 @@ menu:
     path: Menu/mine.yml
 
 autobuy:
-  delay: 60  # В тиках. Как часто будет срабатывать АвтоСкупка. По умолчанию 60 - 3 секунды
+  delay: 60  # In ticks. How often AutoBuy will be triggered. Default is 60 - 3 seconds
   actions:
-    - '[MESSAGE] &8&l> &fАвтоматически продано предметов на сумму &a&l%sell_pay%&f, и &c&l%sell_score% &fочков.'
+    - '[MESSAGE] &8&l> &fAutomatically sold items worth &a&l%sell_pay%&f, and &c&l%sell_score% &fpoints.'
   disabled-worlds:
     - duel-1
     - duel-2
   status:
-    enable: "&aВключён"
-    disable: "&cВыключен"
+    enable: "&aEnabled"
+    disable: "&cDisabled"
 
 messages:
-  sell: "&8&l> &fВы успешно продали предметов на сумму &a&l%sell_pay%&f, и &c&l%sell_score% &fочков."
-  noItems: "&cУ вас нет предметов для продажи"
+  sell: "&8&l> &fYou have successfully sold items worth &a&l%sell_pay%&f, and &c&l%sell_score% &fpoints."
+  noItems: "&cYou have no items to sell."
 
-# за каждые 100 очков игрок будет получать +0.1 к коэффициенту
+# for every 100 points the player will receive +0.1 to the coefficient
 score-to-multiplier-ratio:
   scores: 100
   coefficient: 0.01
 
-# максимальный коэффициент (без учёта донатных бустов)
+# maximum coefficient (excluding donation boosts)
 max-legal-coefficient: 3
 default-coefficient: 1
-# если true, донатные бусты будут обходить значение в max-legal-coefficient
+# if true, donation boosts will bypass the value in max-legal-coefficient
 boosters_except_legal_coefficient: true
 booster:
-  donat-1: # имя (может быть любым)
-    permission: 'buyer.boost.donat1' # (пермишен по которому будет определяться наличие буста)
+  donat-1: # name (can be any)
+    permission: 'buyer.boost.donat1' # (permission by which the presence of a boost will be determined)
     external-coefficient: 0.5
 

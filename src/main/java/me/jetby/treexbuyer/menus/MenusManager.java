@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,8 @@ public class MenusManager {
     private final SellZone sellZone;
     private final Main plugin;
     private final Config config;
+    private final DecimalFormat df = new DecimalFormat("#.##");
+
 
     public MenusManager(Main plugin) {
         this.plugin = plugin;
@@ -95,11 +98,11 @@ public class MenusManager {
     public List<String> setInsidePlaceholders(List<String> strings, MenuButtons button, Player player, double price, double coefficient, double score, String count, double price_with_coefficient, List<String> autoBuyList, String global_auto_sell_toggle_string) {
         return strings.stream()
                 .map(s -> hex(setPlaceholders(player, s)))
-                .map(s -> s.replace("%price%", String.valueOf(price)))
+                .map(s -> s.replace("%price%", String.valueOf(df.format(price))))
                 .map(s -> s.replace("%coefficient%", String.valueOf(coefficient)))
                 .map(s -> s.replace("%score%", String.valueOf(score)))
                 .map(s -> s.replace("%sell_pay%", String.valueOf(count)))
-                .map(s -> s.replace("%price_with_coefficient%", String.valueOf(price_with_coefficient)))
+                .map(s -> s.replace("%price_with_coefficient%", String.valueOf(df.format(price_with_coefficient))))
                 .map(s -> s.replace("%auto_sell_toggle_state%", hex(autoBuyList != null && autoBuyList.contains(button.getMaterialButton().name())
                         ? config.getAutoBuyEnable()
                         : config.getAutoBuyDisable())))

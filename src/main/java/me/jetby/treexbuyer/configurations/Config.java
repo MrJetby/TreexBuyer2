@@ -88,8 +88,8 @@ public class Config {
         defaultCoefficient = configuration.getInt("default-coefficient", 1);
         boosters_except_legal_coefficient = configuration.getBoolean("boosters_except_legal_coefficient", false);
 
-        sellMsg = configuration.getString(hex("messages.sell"));
-        noItemsMsg = configuration.getString(hex("messages.noItems"));
+        sellMsg = configuration.getString("messages.sell");
+        noItemsMsg = configuration.getString("messages.noItems");
 
         loadBoosts(configuration);
     }
