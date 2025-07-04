@@ -15,7 +15,7 @@
 ## Нашли баг?
 
 Нашли баг или хотите предложить идею?
-- Создайте [Issue на GitHub](https://github.com/MrJetby/TreexBuyer/issues).
+- Создайте [Issue на GitHub](https://github.com/MrJetby/TreexBuyer2/issues).
 - Или свяжитесь с нами в Discord: [TreexStudio](https://discord.gg/RcnDgRQVqY)
 
 Спасибо за использование **TreexBuyer**!
