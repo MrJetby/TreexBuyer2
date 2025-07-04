@@ -16,6 +16,9 @@
 - **Авто-скупка**
 - **Система прокачки**
 
+[![image](https://github.com/user-attachments/assets/fe789dba-1dbe-4b6d-88bc-a5b4c110a4ff)](https://mrjetbys-organization.gitbook.io/treexstudio/plugins/treexbuyer)
+
+
 ## Нашли баг?
 
 Нашли баг или хотите предложить идею?
