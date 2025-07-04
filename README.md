@@ -1,3 +1,5 @@
+![image](https://github.com/user-attachments/assets/dcaa8ba8-c6f3-4265-b624-6cb1ddf2ab68)
+
 # TreexBuyer
 
 **TreexBuyer** - Современный плагин на создание скупщика для вашего сервера.
