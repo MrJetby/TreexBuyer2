@@ -1,10 +1,8 @@
-![image](https://github.com/user-attachments/assets/dcaa8ba8-c6f3-4265-b624-6cb1ddf2ab68)
-
-[![image](https://github.com/user-attachments/assets/fe789dba-1dbe-4b6d-88bc-a5b4c110a4ff)](https://mrjetbys-organization.gitbook.io/treexstudio/plugins/treexbuyer)
-
 # TreexBuyer
 
 **TreexBuyer** - Современный плагин на создание скупщика для вашего сервера.
+
+![image](https://github.com/user-attachments/assets/dcaa8ba8-c6f3-4265-b624-6cb1ddf2ab68)
 
 ## **Преимущества:**
 
